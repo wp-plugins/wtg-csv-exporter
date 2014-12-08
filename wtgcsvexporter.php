@@ -1,6 +1,6 @@
 <?php         
 /*
-Plugin Name: WTG CSV Exporter for WordPress
+Plugin Name: WTG CSV Exporter Beta
 Version: 0.0.1
 Plugin URI: http://www.webtechglobal.co.uk
 Description: Use the WebTechGlobal Plugin WTG CSV Exporter to develop plugins quicker, with more security and quicker growth
