@@ -11,7 +11,7 @@
  * @since 0.0.1
  */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 /** 
@@ -61,7 +61,7 @@ class WTGCSVEXPORTER {
                                 
         // add_action() controller
         // Format: array( event | function in this class(in an array if optional arguments are needed) | loading circumstances)
-        // Other class requiring Wordpress hooks start here also, with a method in this main class that calls one or more methods in one or many classes
+        // Other class requiring WordPress hooks start here also, with a method in this main class that calls one or more methods in one or many classes
         // create a method in this class for each hook required plugin wide
         $plugin_actions = array( 
             array( 'admin_menu',                     'admin_menu',                                             'all' ),
@@ -530,10 +530,10 @@ class WTGCSVEXPORTER {
     /**
     * Error display and debugging 
     * 
-    * When request will display maximum php errors including Wordpress errors 
+    * When request will display maximum php errors including WordPress errors 
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -595,7 +595,7 @@ class WTGCSVEXPORTER {
     }
     
     /**
-    * Control Wordpress option functions using this single function.
+    * Control WordPress option functions using this single function.
     * This function will give us the opportunity to easily log changes and some others ideas we have.
     * 
     * @param mixed $option
@@ -669,7 +669,7 @@ class WTGCSVEXPORTER {
     }
       
     /**
-    * Wordpress Help tab content builder
+    * WordPress Help tab content builder
     * 
     * Using class-help.php we can make use of help information and add extensive support text.
     * The plan is to use a SOAP API that gets the help text from the WebTechGlobal server.
@@ -860,7 +860,7 @@ class WTGCSVEXPORTER {
     }   
     
     /**
-    * Wordpress plugin menu
+    * WordPress plugin menu
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
@@ -1076,7 +1076,7 @@ class WTGCSVEXPORTER {
     
     /**
     * 
-    * Part of the WTG Schedule System for Wordpress
+    * Part of the WTG Schedule System for WordPress
     * 1. Does not use WP CRON or normal server CRON
     * 2. Another system is being created to use WP CRON
     * 3. WTG system does not allow specific timing, only restriction of specific hours
@@ -1097,7 +1097,7 @@ class WTGCSVEXPORTER {
     public function event_check() {
         $c2p_schedule_array = self::get_option_schedule_array();
         
-        // do not continue if Wordpress is DOING_AJAX
+        // do not continue if WordPress is DOING_AJAX
         if( self::request_made() ){return;}
                       
         self::log_schedule( __( 'The schedule is being checked. There should be further log entries explaining the outcome.', 'wtgcsvexporter' ), __( 'schedule being checked', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -2018,13 +2018,21 @@ class WTGCSVEXPORTER {
             <div id="icon-options-general" class="icon32"><br /></div>
             
             <?php 
-            $name = '';
+            // build page H2 title
+            $h2_title = '';
+            
+            // if not "WTG CSV Exporter" set this title
             if( $pagetitle !== 'WTG CSV Exporter' ) {
-                $name = 'WTG CSV Exporter: ';    
+                $h2_title = 'WTG CSV Exporter: ' . $pagetitle;    
             }
+
+            // if update screen set this title
+            if( $_GET['page'] == 'wtgcsvexporter_pluginupdate' ){
+                $h2_title = __( 'New WTG CSV Exporter Update Ready', 'wtgcsvexporter' );
+            }           
             ?>
             
-            <h2><?php echo $name . $pagetitle;?></h2>
+            <h2><?php echo $h2_title;?></h2>
 
             <?php 
             // run specific admin triggered automation tasks, this way an output can be created for admin to see
@@ -2122,7 +2130,7 @@ class WTGCSVEXPORTER {
     }
     
     /**
-    * Returns the plugins standard date (MySQL Date Time Formatted) with common format used in Wordpress.
+    * Returns the plugins standard date (MySQL Date Time Formatted) with common format used in WordPress.
     * Optional $time parameter, if false will return the current time().
     * 
     * @param integer $timeaddition, number of seconds to add to the current time to create a future date and time
@@ -2139,7 +2147,7 @@ class WTGCSVEXPORTER {
             return current_time( 'mysql',0);// example 2005-08-05 10:41:13
         }
         
-        // default to standard PHP with a common format used by Wordpress and MySQL but not the actual database time
+        // default to standard PHP with a common format used by WordPress and MySQL but not the actual database time
         return date( 'Y-m-d H:i:s', $thetime + $timeaddition);    
     }   
     
@@ -2254,7 +2262,7 @@ class WTGCSVEXPORTER {
     }
     
     /**
-    * Returns Wordpress version in short
+    * Returns WordPress version in short
     * 1. Default returned example by get_bloginfo( 'version' ) is 3.6-beta1-24041
     * 2. We remove everything after the first hyphen
     */
@@ -2302,26 +2310,6 @@ class WTGCSVEXPORTER {
                      
         return true;      
     } 
-    
-    /**
-    * Builds a nonced admin link styled as button by Wordpress
-    *
-    * @package WTG CSV Exporter
-    * @since 0.0.1
-    *
-    * @return string html a href link nonced by Wordpress  
-    * 
-    * @param mixed $page - $_GET['page']
-    * @param mixed $action - examplenonceaction
-    * @param mixed $title - Any text for a title
-    * @param mixed $text - link text
-    * @param mixed $values - begin with & followed by values
-    * 
-    * @deprecated this method has been moved to the WTGCSVEXPORTER_UI class
-    */
-    public function linkaction( $page, $action, $title = 'WTG CSV Exporter admin link', $text = 'Click Here', $values = '' ){
-        return '<a href="'. wp_nonce_url( admin_url() . 'admin.php?page=' . $page . '&wtgcsvexporteraction=' . $action  . $values, $action ) . '" title="' . $title . '" class="button c2pbutton">' . $text . '</a>';
-    }
     
     /**
     * Get POST ID using post_name (slug)
@@ -2433,7 +2421,7 @@ class WTGCSVEXPORTER {
     }  
     
     /**
-    * Uses wp-admin/includes/image.php to store an image in Wordpress files and database
+    * Uses wp-admin/includes/image.php to store an image in WordPress files and database
     * from HTTP
     * 
     * @uses wp_insert_attachment()
@@ -2840,7 +2828,7 @@ if(!class_exists( 'WP_List_Table' ) ){
 }
         
 /**
-* Lists tickets post type using standard Wordpress list table
+* Lists tickets post type using standard WordPress list table
 */
 class WTGCSVEXPORTER_Log_Table extends WP_List_Table {
     

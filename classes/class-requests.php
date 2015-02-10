@@ -18,7 +18,7 @@
 * @since 0.0.1
 */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 /**
@@ -96,7 +96,7 @@ class WTGCSVEXPORTER_Requests {
                               
         // $_POST security
         if( $method == 'post' ) {                      
-            // check_admin_referer() wp_die()'s if security fails so if we arrive here Wordpress security has been passed
+            // check_admin_referer() wp_die()'s if security fails so if we arrive here WordPress security has been passed
             // now we validate individual values against their pre-registered validation method
             // some generic notices are displayed - this system makes development faster
             $post_result = true;
@@ -414,8 +414,6 @@ class WTGCSVEXPORTER_Requests {
     public function globalswitches() {
         global $wtgcsvexporter_settings;
         $wtgcsvexporter_settings['noticesettings']['wpcorestyle'] = $_POST['uinoticestyle'];        
-        $wtgcsvexporter_settings['standardsettings']['textspinrespinning'] = $_POST['textspinrespinning'];
-        $wtgcsvexporter_settings['standardsettings']['systematicpostupdating'] = $_POST['systematicpostupdating'];
         $wtgcsvexporter_settings['posttypes']['wtgflags']['status'] = $_POST['flagsystemstatus'];
         $wtgcsvexporter_settings['widgetsettings']['dashboardwidgetsswitch'] = $_POST['dashboardwidgetsswitch'];
         $this->WTGCSVEXPORTER->update_settings( $wtgcsvexporter_settings ); 
@@ -593,8 +591,7 @@ class WTGCSVEXPORTER_Requests {
         $columns_string = implode( ',', $wtgcsvexporter_settings['csvexportprofiles']['pages']['tables']['posts'] );
         
         $this->WTGCSVEXPORTER->update_settings( $wtgcsvexporter_settings );
-        //$this->UI->create_notice( __( 'You have updated the export profile and your .csv file should be downloading now.', 'wtgcsvexporter' ), 'success', 'Small', __( 'Export Success', 'wtgcsvexporter' ) );                 
-        
+
         $select_posts_result = $this->DB->selectwherearray( $wpdb->prefix . 'posts', 
         null /*condition*/, 
         null /*orderby*/, 
@@ -606,5 +603,453 @@ class WTGCSVEXPORTER_Requests {
         $export_result = $this->Files->export_csv_download( $select_posts_result, $wtgcsvexporter_settings['csvexportprofiles']['pages']['tables']['posts'] );
    }    
    
+   /**
+   * Saves primary data selection on single file export view.
+   * 
+   * @author Ryan R. Bayne
+   * @package WTG CSV Exporter
+   * @since 0.0.1
+   * @version 1.0
+   */
+    public function primarybasic() {
+        global $wtgcsvexporter_settings;
+
+        if( isset( $_POST['primarysources'] ) ) {
+            $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['primary'] = $_POST['primarysources'];    
+        }
+
+        $this->WTGCSVEXPORTER->update_settings( $wtgcsvexporter_settings );
+        $this->UI->create_notice( __( 'Your primary data selection has been saved.', 'wtgcsvexporter' ), 'success', 'Small', __( 'Primary Selection Saved', 'wtgcsvexporter' ) );               
+    }
+   
+    /**
+    * Saves selection of meta keys for exporting to .csv file.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function metabasic() {
+        global $wtgcsvexporter_settings;
+
+        $meta_keys = $this->DB->metakeys_distinct();
+        
+        $total_keys = count( $meta_keys );
+        
+        if( isset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['metakeys'] ) )
+        {
+            unset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['metakeys'] );
+        }
+        
+        for($i=0;$i<=$total_keys;$i++){
+            if( isset( $_POST['distinctmetakeys' . $i] ) )
+            {
+               $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['metakeys'][] = $_POST['distinctmetakeys' . $i]; 
+            }
+        }
+
+        $this->WTGCSVEXPORTER->update_settings( $wtgcsvexporter_settings );
+        $this->UI->create_notice( __( 'Your meta-key selections have been saved.', 'wtgcsvexporter' ), 'success', 'Small', __( 'Meta Keys Saved', 'wtgcsvexporter' ) );               
+    }
+    
+    /**
+    * Selectedd taxonomies for export to .csv file.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function taxonomiesbasic() {
+        global $wtgcsvexporter_settings;
+
+        $meta_keys = $this->DB->metakeys_distinct();
+        
+        $totaltaxonomies = count( get_taxonomies() );
+        
+        if( isset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['taxonomies'] ) )
+        {
+            unset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['taxonomies'] );
+        }
+                
+        for($i=0;$i<=$totaltaxonomies;$i++){
+            if( isset( $_POST['exporttaxonomies' . $i] ) )
+            {
+               $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['taxonomies'][] = $_POST['exporttaxonomies' . $i]; 
+            }
+        }
+
+        $this->WTGCSVEXPORTER->update_settings( $wtgcsvexporter_settings );
+        $this->UI->create_notice( __( 'Your taxonomy selections have been saved.', 'wtgcsvexporter' ), 'success', 'Small', __( 'Taxonomy Selections Saved', 'wtgcsvexporter' ) );               
+    }
+    
+    /**
+    * Final Actions: create profile by moving singlefileprofile profile
+    * to it's own array in $wtgcsvexporter_settings.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function finishbasic() {
+        global $wtgcsvexporter_settings;
+        
+        
+        
+        $this->WTGCSVEXPORTER->update_settings( $wtgcsvexporter_settings );
+        $this->UI->create_notice( __( 'Your new CSV export profile has been created permanently. You can now use this view to create another new profile.', 'wtgcsvexporter' ), 'success', 'Small', __( 'Created Permanent Profile', 'wtgcsvexporter' ) );                   
+    }
+        
+    /**
+    * Saves selected database tables user wants to be included in
+    * csv export. User will need to select specific columns on an additional
+    * form after this save.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function tablesdetailed() {
+        global $wtgcsvexporter_settings;
+
+        $meta_keys = $this->DB->metakeys_distinct();
+        
+        $totaltables = count( $this->DB->get_tables() );
+        
+        if( isset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['tables'] ) )
+        {
+            unset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['tables'] );
+        }
+                
+        for($i=0;$i<=$totaltables;$i++){
+            if( isset( $_POST['includedtables' . $i] ) )
+            {
+               $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['tables'][] = $_POST['includedtables' . $i]; 
+            }
+        }
+
+        $this->WTGCSVEXPORTER->update_settings( $wtgcsvexporter_settings );
+        $this->UI->create_notice( __( 'Your table selections have been saved.', 'wtgcsvexporter' ), 'success', 'Small', __( 'Table Selections Saved', 'wtgcsvexporter' ) );
+    }
+     
+    /**
+    * Saves selected columns to be exported. Each column is added to
+    * .csv file ass a new header.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function columnsdetailed() {
+        global $wtgcsvexporter_settings;
+        
+        $totaltables = $this->DB->get_tables();
+        
+        if( isset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['columns'] ) )
+        {
+            unset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['columns'] );
+        }
+                
+        foreach( $totaltables as $table ){
+            if( isset( $_POST['expcols' . $table] ) )
+            {
+               $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['columns'][$table] = $_POST['expcols' . $table]; 
+            }
+        } 
+        
+        $this->WTGCSVEXPORTER->update_settings( $wtgcsvexporter_settings );
+        $this->UI->create_notice( __( 'Your settings for adding individual columns to your .csv file have been saved. If you experience any troubles please consider the size of data in each column, troubleshoot by reducing the number of columns.', 'wtgcsvexporter' ), 'success', 'Small', __( 'Column Selections Saved', 'wtgcsvexporter' ) );           
+    }
+            
+    /**
+    * Final action for creating detailed profile.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function finishdetailed() {
+        global $wtgcsvexporter_settings;
+         
+        $this->WTGCSVEXPORTER->update_settings( $wtgcsvexporter_settings );
+        $this->UI->create_notice( __( 'Your new CSV export profile has been created permanently. You can now use this view to create another new profile.', 'wtgcsvexporter' ), 'success', 'Small', __( 'Created Permanent Profile', 'wtgcsvexporter' ) );                   
+    }
+    
+    /**
+    * Exports .csv file based on single file profile which is a temporary
+    * profile. 
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.0                          
+    */
+    public function testbasicprofile() {
+        global $wtgcsvexporter_settings;
+        $primary = false;
+        $headers_array = array();
+        $headers_row = '';
+
+        // establish primary data sources
+        $initial_primary_sources = array( 'comments' => __( 'Comments', 'wtgcsvexporter' ), 'allposttypes' => __( 'All Post Types', 'wtgcsvexporter' ) );
+        // get post types for adding to primary data sources
+        $this->post_types_objects = get_post_types( '', 'objects' ); 
+        // rebuild the post types array
+        $this->post_types_array = array();
+        if( $this->post_types_objects )
+        {
+            foreach( $this->post_types_objects as $pt )
+            {
+                $this->post_types_array = array_merge( $this->post_types_array, array( $pt->name => $pt->labels->name ) );
+            }
+        }      
+        // merge the initial sources with the post types  
+        $primary_sources_array = array_merge( $initial_primary_sources, $this->post_types_array );        
+        
+        // primary source is always required in this procedure
+        if( !isset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['primary'] ) ){
+            $this->UI->create_notice( __( 'Your profile.', 'wtgcsvexporter' ), 'error', 'Small', __( 'You do not have a primary data source saved for your single file profile. This must be corrected before you can run an export.', 'wtgcsvexporter' ) );                           
+            return false;
+        } else {
+            $primary = $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['primary'];
+        }
+        
+        // query the primary data
+        switch ( $primary ) {
+           case 'comments':
+         
+                    $defaults = array(
+                        'author_email' => '',
+                        'author__in' => '',
+                        'author__not_in' => '',
+                        'include_unapproved' => '',
+                        'fields' => '',
+                        'ID' => '',
+                        'comment__in' => '',
+                        'comment__not_in' => '',
+                        'karma' => '',
+                        'number' => '',
+                        'offset' => '',
+                        'orderby' => '',
+                        'order' => 'DESC',
+                        'parent' => '',
+                        'post_author__in' => '',
+                        'post_author__not_in' => '',
+                        'post_ID' => '',
+                        'post_id' => 0,
+                        'post__in' => '',
+                        'post__not_in' => '',
+                        'post_author' => '',
+                        'post_name' => '',
+                        'post_parent' => '',
+                        'post_status' => '',
+                        'post_type' => '',
+                        'status' => 'all',
+                        'type' => '',
+                        'user_id' => '',
+                        'search' => '',
+                        'count' => false,
+                        'meta_key' => '',
+                        'meta_value' => '',
+                        'meta_query' => '',
+                        'date_query' => null, // See WP_Date_Query
+                    );        
+                    
+                    $primary_object = get_comments( $defaults );
+
+                    // add new headers based on the query performed
+                    
+             break;
+           case 'allposttypes':
+           
+                    // this should be post, page or a custom post type
+                    $args = array(
+                        'posts_per_page'   => 5,
+                        'offset'           => 0,
+                        'category'         => '',
+                        'category_name'    => '',
+                        'orderby'          => 'post_date',
+                        'order'            => 'DESC',
+                        'include'          => '',
+                        'exclude'          => '',
+                        'meta_key'         => '',
+                        'meta_value'       => '',
+                        'post_type'        => 'all',
+                        'post_mime_type'   => '',
+                        'post_parent'      => '',
+                        //'post_status'      => 'publish',
+                        'suppress_filters' => true 
+                    );
+                    $primary_object = get_posts( $args );
+                                    
+             break;
+           default:
+           
+                    // this should be post, page or a custom post type
+                    $args = array(
+                        'posts_per_page'   => 5,
+                        'offset'           => 0,
+                        'category'         => '',
+                        'category_name'    => '',
+                        'orderby'          => 'post_date',
+                        'order'            => 'DESC',
+                        'include'          => '',
+                        'exclude'          => '',
+                        'meta_key'         => '',
+                        'meta_value'       => '',
+                        'post_type'        => $primary,
+                        'post_mime_type'   => '',
+                        'post_parent'      => '',
+                        //'post_status'      => 'publish',
+                        'suppress_filters' => true 
+                    );
+                    $primary_object = get_posts( $args ); 
+                           
+             break;
+        }
+
+        // change primary data objects to array
+        $first = true;
+        foreach( $primary_object as $key => $post_object )
+        {
+            $records_array[] = (array) $post_object;    
+            
+            // add new primary headers
+            if( $first )
+            {
+                $headers_array = array_keys( $records_array[0] );
+                $first = false;// prevents headers being set again    
+            } 
+        }
+        
+        // add meta data and columns
+        if( isset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['metakeys'] ) ) 
+        {
+            // loop through each post or comment, query it's meta and add the meta to the array
+            foreach( $records_array as $primarykey => $anitem )
+            {                                  
+                foreach( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['metakeys'] as $metakey )
+                {                                          
+                    $anitems_meta_value = get_post_meta( $anitem['ID'], $metakey, false );  
+                    
+                    // if value returned add it to records
+                    if( $anitems_meta_value )
+                    {
+                        $records_array[ $primarykey ][ $metakey ] = serialize( $anitems_meta_value );
+                    }  
+                    
+                    // add meta key as new column
+                    if( !in_array( $metakey, $headers_array ) )
+                    {
+                        $headers_array[] = $metakey;    
+                    }                               
+                }
+            }
+        }
+
+        // add taxonomies and columns
+        // avoid doing this if primary does not have taxonomies
+        if( $primary !== 'comments' && isset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['taxonomies'] ) ) 
+        {
+            foreach( $records_array as $primarykey => $anitem )
+            {
+                foreach( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['taxonomies'] as $secondarykey => $tax )
+                {
+                    if( $tax == 'post_tag' )
+                    {
+                        $anitems_taxonomy_result = wp_get_post_tags( $anitem['ID'] );
+                        if( $anitems_taxonomy_result )
+                        {
+                            $records_array[ $primarykey ][ $tax ] = serialize( (array) $anitems_taxonomy_result );  
+                        }
+                    }
+         
+                    // add tax name as new column header
+                    if( !in_array( $tax, $headers_array ) )
+                    {
+                        $headers_array[] = $tax;    
+                    }                    
+                }
+            }    
+        }        
+
+        $this->Files->export_csv_download( $records_array, $headers_array, time() . '.csv', true );
+    }
+    
+    /**
+    * Exports .csv file based on single file profile which is a temporary
+    * profile. 
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.0                          
+    */
+    public function testdetailedprofile() {
+        global $wtgcsvexporter_settings;
+        $primary = false;
+        $headers_array = array();
+        $headers_row = '';
+
+        
+        
+        // establish primary data sources
+        $initial_primary_sources = array( 'comments' => __( 'Comments', 'wtgcsvexporter' ), 'allposttypes' => __( 'All Post Types', 'wtgcsvexporter' ) );
+        
+        
+        
+        // get post types for adding to primary data sources
+        $this->post_types_objects = get_post_types( '', 'objects' ); 
+        
+        
+        // rebuild the post types array
+        $this->post_types_array = array();
+        if( $this->post_types_objects )
+        {
+            foreach( $this->post_types_objects as $pt )
+            {
+                $this->post_types_array = array_merge( $this->post_types_array, array( $pt->name => $pt->labels->name ) );
+            }
+        }      
+        // merge the initial sources with the post types  
+        $primary_sources_array = array_merge( $initial_primary_sources, $this->post_types_array );        
+        
+        
+        
+        
+        // primary source is always required in this procedure
+        if( !isset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['primary'] ) ){
+            $this->UI->create_notice( __( 'Your profile.', 'wtgcsvexporter' ), 'error', 'Small', __( 'You do not have a primary data source saved for your single file profile. This must be corrected before you can run an export.', 'wtgcsvexporter' ) );                           
+            return false;
+        } else {
+            $primary = $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['primary'];
+        }
+        
+        // add individually selected tables
+        if( isset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['tables'] ) ) 
+        {
+            // if individually selected columns exist in this table then do not add the entire table
+            //$wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['columns'];    
+        }        
+        
+        // add individually selected columns
+        if( isset( $wtgcsvexporter_settings['csvexportprofiles']['singlefileprofile']['columns'] ) ) 
+        {
+
+   
+        }      
+   
+   
+        var_dump( $headers_array );
+        //$this->Files->export_csv_download( $records_array, $headers_array, time() . '.csv', true );
+        
+        
+    }
+        
 }// WTGCSVEXPORTER_Requests       
 ?>

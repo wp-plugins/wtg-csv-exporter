@@ -434,7 +434,7 @@ abstract class WTGCSVEXPORTER_View {
     * Normally it would be a single table though.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */

@@ -35,15 +35,19 @@ drive us towards the next update.
  
 == Installation ==
 
-1. Method 1: Move folder inside the .zip file into the "wp-content/plugins/" directory if your website is stored locally. Then upload the new plugin folder using your FTP program.
-1. Method 2: Use your hosting control panels file manager to upload the plugin folder (not the .zip, only the folder inside it) to the "wp-content/plugins/" directory.
-1. Method 3: In your WordPress admin click on Plugins then click on Add New. You can search for your plugin there and perform the installation easily. This method does not apply to premium plugins.
+Please install WTG CSV Exporter from WordPress.org by going to Plugins --> Add New and searching "WTG CSV Exporter". This is safer and quicker than any other methods.
 
 == Frequently Asked Questions ==
 
+= As a WebTechGlobal subscriber can I get higher priority support for this plugin? =
+Yes - subscribers are put ahead of my Free Workflow and will not only result in a quicker response for support
+but requests for new features are marked with higher priority.
+
 = Can I hire you to customize the plugin for me? =
-Yes you can pay the plugin author to improve the plugin to suit your needs. Many improvements will be done free so
-post your requirements on the plugins forum first. 
+Yes - you can pay to improve the plugin to suit your needs. However many improvements will be done free.
+Please post your requirements on the plugins forum first before sending me Paypal or Bitcoins. If your request is acceptable
+within my plans it will always be added to the WTG Tasks Management plugin which is part of my workflow system. The tasks
+priority can be increased based on your WebTechGlobal subscription status, donations or contributions you have made.
 
 == Screenshots ==
 
@@ -57,17 +61,20 @@ Translators needed to help localize WTG CSV Exporter.
 
 == Upgrade Notice ==
 
-No special upgrade instructions this time. Just remember to backup your site files and database.
+Please update this plugin using your WordPress Installed Plugins screen. Click on Update Now under this plugins details when an update is ready.
+This method is safer than using any other source for the files.
 
 == Changelog == 
 
-= 0.0.1 =
+= 0.0.2 =
 * Feature Changes
-    * None
+    * Default Profiles renamed to Basic Profiles
+    * Added the Create Basic Profiles view (focuses on WP core data)
+    * Added file for Create Detailed Profiles view, the view will probably come in 0.0.12                                         
 * Technical Information
-    * None
+    * Some exports may serialize data that is in PHP arrays, exporter would need to unseralize. Options will be added for alternative approaches.
 * Known Issues
-    * None
+    * Some or all forms may not show properly on the WP dashboard - does not stop the plugin being used though this is just an extra feature.
 
 == Donators ==
 These donators have giving their permission to add their site to this list so that plugin authors can
@@ -98,7 +105,7 @@ These contributors published videos on YouTube or another video streaming websit
 
 = When To Update = 
 
-Browse the changes log and decide if an update is required. There is nothing wrong with skipping version if it does not
+Browse the changes log and decide if you need any recent changes. There is nothing wrong with skipping versions if changes do not
 help you - look for security related changes or new features that could really benefit you. If you do not see any you may want
 to avoid updating. If you decide to apply the new version - do so after you have backedup your entire WordPress installation 
 (files and data). Files only or data only is not a suitable backup. Every WordPress installation is different and creates a different

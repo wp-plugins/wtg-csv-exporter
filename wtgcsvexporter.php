@@ -1,9 +1,9 @@
 <?php         
 /*
-Plugin Name: WTG CSV Exporter Beta
-Version: 0.0.1
+Plugin Name: WTG CSV Exporter Beta for WordPress
+Version: 0.0.2
 Plugin URI: http://www.webtechglobal.co.uk
-Description: Use the WebTechGlobal Plugin WTG CSV Exporter to develop plugins quicker, with more security and quicker growth
+Description: Export WP data to .csv files with intention of creating a file for using with other software.
 Author: Ryan Bayne
 Author URI: http://www.webtechglobal.co.uk
 Last Updated: December 2014
@@ -12,7 +12,7 @@ Domain Path: /languages
 
 GPL v3 
 
-This program is free software downloaded from Wordpress.org: you can redistribute it and/or modify
+This program is free software downloaded from WordPress.org: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
@@ -25,9 +25,6 @@ and we do not promise it is ready for any one persons specific needs.
 See the GNU General Public License for more details.
 
 See <http://www.gnu.org/licenses/>.
-
-This license does not apply to the paid edition which comes with premium
-services not just software. License and agreement is seperate.
 */           
   
 // Prohibit direct script loading
@@ -41,7 +38,7 @@ if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) // Login scr
 }
               
 // package variables
-$c2p_currentversion = '0.0.1';# to be removed, version is now in the WTGCSVEXPORTER() class 
+$c2p_currentversion = '0.0.2';# to be removed, version is now in the WTGCSVEXPORTER() class 
 $c2p_debug_mode = false;# to be phased out, going to use environment variables (both WP and php.ini instead)
 
 // go into dev mode if on test installation (if directory contains the string you will see errors and other fun stuff for geeks)               
@@ -58,7 +55,7 @@ if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) )
 }                   
 
 // define constants, feel free to add some of your own...                              
-if(!defined( "WTGCSVEXPORTER_NAME") ){define( "WTGCSVEXPORTER_NAME", 'WTG CSV Exporter' );} 
+if(!defined( "WTGCSVEXPORTER_NAME") ){define( "WTGCSVEXPORTER_NAME", 'WTG CSV Exporter Beta' );} 
 if(!defined( "WTGCSVEXPORTER__FILE__") ){define( "WTGCSVEXPORTER__FILE__", __FILE__);}
 if(!defined( "WTGCSVEXPORTER_BASENAME") ){define( "WTGCSVEXPORTER_BASENAME",plugin_basename( WTGCSVEXPORTER__FILE__ ) );}
 if(!defined( "WTGCSVEXPORTER_ABSPATH") ){define( "WTGCSVEXPORTER_ABSPATH", plugin_dir_path( __FILE__) );}//C:\AppServ\www\wordpress-testing\wtgplugintemplate\wp-content\plugins\wtgplugintemplate/  

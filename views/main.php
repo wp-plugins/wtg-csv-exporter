@@ -48,7 +48,7 @@ class WTGCSVEXPORTER_Main_View extends WTGCSVEXPORTER_View {
         // array of meta boxes + used to register dashboard widgets (id, title, callback, context, priority, callback arguments (array), dashboard widget (boolean) )   
         $this->meta_boxes_array = array(
             // array( id, title, callback (usually parent, approach created by Ryan Bayne), context (position), priority, call back arguments array, add to dashboard (boolean), required capability
-            array( 'main-welcome', __( 'Wordpress Plugin WTG CSV Exporter Pro by Ryan Bayne', 'wtgcsvexporter' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'welcome' ), true, 'activate_plugins' ),
+            array( 'main-welcome', __( 'Start Here', 'wtgcsvexporter' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'welcome' ), true, 'activate_plugins' ),
             array( 'main-schedulerestrictions', __( 'Schedule Restrictions', 'wtgcsvexporter' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'schedulerestrictions' ), true, 'activate_plugins' ),
             array( 'main-scheduleinformation', __( 'Schedule Information', 'wtgcsvexporter' ), array( $this, 'parent' ), 'side','default',array( 'formid' => 'scheduleinformation' ), true, 'activate_plugins' ),
             array( 'main-globalswitches', __( 'Global Switches', 'wtgcsvexporter' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'globalswitches' ), true, 'activate_plugins' ),
@@ -154,11 +154,11 @@ class WTGCSVEXPORTER_Main_View extends WTGCSVEXPORTER_View {
     * @version 1.0
     */
     public function postbox_main_welcome( $data, $box ) {    
-        echo '<p>' . __( "Like all my plugins - I have a unique plan that may not always be clear in the plugins early months.
-        This plugin aims to offer download profiles that make further downloading (after the first) easier and quicker. I did not
-        stop at the idea of a profile that allows the downloading of a very specific .csv file. I decided to create a plugin that
-        offered the ability to setup multiple profiles. I have no idea if someone out there will need such a plugin but it is one
-        of those ideas that some people may realize they needed once they try it.", 'wtgcsvexporter' ) . '</p>';
+        echo '<p>' . __( "My exporter is designed to offer many .csv export profiles/configurations. Like
+        all of my plugins it is designed for the developer (mainly me) to adapt the interface for a specific user. 
+        However it is not a requirement for you to have the plugin adapted and the plugin is ready to export data.
+        If however the various interfaces and options do cause confusion please come to the plugins forum for quick
+        help.", 'wtgcsvexporter' ) . '</p>';
     }       
 
     /**
@@ -414,7 +414,7 @@ class WTGCSVEXPORTER_Main_View extends WTGCSVEXPORTER_View {
 
             <table class="form-table">
             <?php        
-            $this->UI->option_switch( __( 'Wordpress Notice Styles', 'wtgcsvexporter' ), 'uinoticestyle', 'uinoticestyle', $wtgcsvexporter_settings['noticesettings']['wpcorestyle'] );
+            $this->UI->option_switch( __( 'WordPress Notice Styles', 'wtgcsvexporter' ), 'uinoticestyle', 'uinoticestyle', $wtgcsvexporter_settings['noticesettings']['wpcorestyle'] );
             $this->UI->option_switch( __( 'WTG Flag System', 'wtgcsvexporter' ), 'flagsystemstatus', 'flagsystemstatus', $wtgcsvexporter_settings['posttypes']['wtgflags']['status'] );
             $this->UI->option_switch( __( 'Dashboard Widgets Switch', 'wtgcsvexporter' ), 'dashboardwidgetsswitch', 'dashboardwidgetsswitch', $wtgcsvexporter_settings['widgetsettings']['dashboardwidgetsswitch'], 'Enabled', 'Disabled', 'disabled' );      
             ?>
@@ -574,7 +574,7 @@ class WTGCSVEXPORTER_Main_View extends WTGCSVEXPORTER_View {
             <br>
             <label for="wtgcsvexporter_logfields_sqlerror"><input type="checkbox" name="wtgcsvexporter_logfields[]" id="wtgcsvexporter_logfields_sqlerror" value="sqlerror" <?php if( isset( $wtgcsvexporter_settings['logsettings']['logscreen']['displayedcolumns']['sqlerror'] ) ){echo 'checked';} ?>> <?php _e( 'SQL Error', 'wtgcsvexporter' );?></label>
             <br>
-            <label for="wtgcsvexporter_logfields_wordpresserror"><input type="checkbox" name="wtgcsvexporter_logfields[]" id="wtgcsvexporter_logfields_wordpresserror" value="wordpresserror" <?php if( isset( $wtgcsvexporter_settings['logsettings']['logscreen']['displayedcolumns']['wordpresserror'] ) ){echo 'checked';} ?>> <?php _e( 'Wordpress Erro', 'wtgcsvexporter' );?>r</label>
+            <label for="wtgcsvexporter_logfields_wordpresserror"><input type="checkbox" name="wtgcsvexporter_logfields[]" id="wtgcsvexporter_logfields_wordpresserror" value="wordpresserror" <?php if( isset( $wtgcsvexporter_settings['logsettings']['logscreen']['displayedcolumns']['wordpresserror'] ) ){echo 'checked';} ?>> <?php _e( 'WordPress Erro', 'wtgcsvexporter' );?>r</label>
             <br>
             <label for="wtgcsvexporter_logfields_screenshoturl"><input type="checkbox" name="wtgcsvexporter_logfields[]" id="wtgcsvexporter_logfields_screenshoturl" value="screenshoturl" <?php if( isset( $wtgcsvexporter_settings['logsettings']['logscreen']['displayedcolumns']['screenshoturl'] ) ){echo 'checked';} ?>> <?php _e( 'Screenshot URL', 'wtgcsvexporter' );?></label>
             <br>

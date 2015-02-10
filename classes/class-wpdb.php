@@ -1,13 +1,13 @@
 <?php
 /** 
-* Wordpress database interaction covering common queries
+* WordPress database interaction covering common queries
 * 
 * @package WTG CSV Exporter
 * @author Ryan Bayne   
 * @since 0.0.1
 */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 /**
@@ -291,12 +291,15 @@ class WTGCSVEXPORTER_DB {
     
     /**
     * Uses get_results and finds all DISTINCT meta_keys, returns the result.
-    * Currently does not have any measure to ensure keys are custom field only.
+    * Currently does not have any measure to ensure keys are from custom field only
+    * rather than entered by other methods and hidden with underscore.
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
     * @since 7.0.0
     * @version 1.0 
+    * 
+    * @todo not ready for intended use (return manually entered custom fields) so use metakeys_distinct() instead
     */
     public function customfield_keys_distinct() {
         global $wpdb;
@@ -316,16 +319,18 @@ class WTGCSVEXPORTER_DB {
     }
     
     /**
-    * Uses get_results and finds all DISTINCT meta_keys, returns the result  
+    * Uses get_results and finds all DISTINCT meta_keys with optional
+    * post type.  
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
     * @since 7.0.0
-    * @version 1.0 
+    * @version 1.1 
     */
-    public function metakeys_distinct() {
+    public function metakeys_distinct( $post_type = null ) {
         global $wpdb;
-        return $wpdb->get_results( "SELECT DISTINCT meta_key FROM $wpdb->postmeta 
+        
+        $query = "SELECT DISTINCT meta_key FROM $wpdb->postmeta 
                                       WHERE meta_key != '_encloseme' 
                                       AND meta_key != '_wp_page_template'
                                       AND meta_key != '_edit_last'
@@ -337,7 +342,13 @@ class WTGCSVEXPORTER_DB {
                                       AND meta_key != '_thumbnail_id'
                                       AND meta_key != '_wp_attachment_image_alt'
                                       AND meta_key != '_wp_attachment_metadata'
-                                      AND meta_key != '_wp_attached_file'");    
+                                      AND meta_key != '_wp_attached_file'";
+        
+        if( is_string( $post_type ) ) {
+            $query .= "AND post_type != '$post_type'";
+        }
+        
+        return $wpdb->get_results( $query );    
     }
     
     /**
@@ -368,7 +379,7 @@ class WTGCSVEXPORTER_DB {
     }
     
     /**
-    * Returns SQL query result of all option records in Wordpress options table that begin with the giving 
+    * Returns SQL query result of all option records in WordPress options table that begin with the giving 
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
@@ -407,7 +418,7 @@ class WTGCSVEXPORTER_DB {
     
     /**
      * Checks if a database table name exists or not
-     * 1. One issue with this function is that Wordpress treats the lack of tables existence as an error
+     * 1. One issue with this function is that WordPress treats the lack of tables existence as an error
      * 2. Another approach is using wtgcsvexporter_WP_SQL_get_tables() and checking the array for the table, this is error free
      * 
      * @author Ryan R. Bayne
@@ -444,7 +455,7 @@ class WTGCSVEXPORTER_DB {
     }
     
     /**
-    * Returns array of tables from the Wordpress database
+    * Returns array of tables from the WordPress database
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter

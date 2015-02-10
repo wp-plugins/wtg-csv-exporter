@@ -7,7 +7,7 @@
  * @since 0.0.1
  */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 add_action( 'init', 'wtgcsvexporter_init_posttype_contentdesigns' );
@@ -56,7 +56,7 @@ function wtgcsvexporter_init_posttype_contentdesigns() {
 */
 function wtgcsvexporter_add_meta_boxes_post() {
     //global $wtgcsvexporter_settings;
-    // author adsense (allows Wordpress authors or users with publish_posts ability to add their own adsense snippet)
+    // author adsense (allows WordPress authors or users with publish_posts ability to add their own adsense snippet)
     //if( $wtgcsvexporter_settings['monetizesection']['adsense']['authoradsense']['switch'] == 'enabled' && current_user_can( 'publish_posts' ) ){
     //    add_meta_box(
     //        'posts-meta-authoradsense',

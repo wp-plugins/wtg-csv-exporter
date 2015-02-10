@@ -1,6 +1,6 @@
 <?php
 /** 
- * Form builder and handler classes for Wordpress only
+ * Form builder and handler classes for WordPress only
  * 
  * @package WTG CSV Exporter
  * @author Ryan Bayne   
@@ -9,7 +9,7 @@
  */  
 
 /** 
-* Main form builder and handler class for Wordpress
+* Main form builder and handler class for WordPress
 * 
 * @package WTG CSV Exporter
 * @author Ryan Bayne   
@@ -204,7 +204,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Register the form, done before registering each input
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -227,7 +227,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * after form processing.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -358,13 +358,41 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
                     }                    
                     
                     // if not enough checked FAIL
-                     if( $box_checked < $input_array['minimumchecks'] ) {
+                    $minimum_checks = 0;
+                    if( isset( $input_array['minimumchecks'] ) && is_numeric( $input_array['minimumchecks'] ) )
+                    {
+                        $minimum_checks = $input_array['minimumchecks'];    
+                    }
+                    elseif( !isset( $input_array['minimumchecks'] ) && $input_array['required'] === true )  
+                    { 
+                        $minimum_checks = 1; 
+                    }
+                    elseif( !isset( $input_array['minimumchecks'] ) && $input_array['required'] === false )
+                    {
+                        $minimum_checks = 0; 
+                    }
+                    
+                    if( $box_checked < $minimum_checks ) {
                         $this->UI->create_notice( sprintf( __( 'You have not checked enough boxes for the %s option.', 'csv2post' ), $input_array['optiontitle'] ), 'error', 'Small', __( 'Check More Boxes', 'wtgcsvexporter' ) );                    
                         return false;                    
                     }
                                        
                     // if too many checked....you guessed it FAIL
-                    if( $box_checked > $input_array['maximumchecks'] ) {
+                    $maximum_checks = 9999;
+                    if( isset( $input_array['maximumchecks'] ) && is_numeric( $input_array['maximumchecks'] ) )
+                    {
+                        $maximum_checks = $input_array['minimumchecks'];    
+                    }
+                    elseif( !isset( $input_array['maximumchecks'] ) && $input_array['required'] === true )  
+                    { 
+                        $maximum_checks = 9999; 
+                    }
+                    elseif( !isset( $input_array['maximumchecks'] ) && $input_array['required'] === false )
+                    {
+                        $maximum_checks = 9999; 
+                    }
+                                        
+                    if( $box_checked > $maximum_checks ) {
                         $this->UI->create_notice( sprintf( __( 'You have checked too many boxes for the %s option.', 'csv2post' ), $input_array['optiontitle'] ), 'error', 'Small', __( 'Please Uncheck Boxes', 'wtgcsvexporter' ) );                    
                         return false;                    
                     }                    
@@ -703,7 +731,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Function to aid the building of a validation array
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -725,7 +753,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Function aids the building of the parameters array
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -857,7 +885,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Ensure submitted input is no longer than giving length
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     * 
@@ -877,7 +905,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Ensure submitted input is no shorter than giving length
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     * 
@@ -897,7 +925,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Match regex.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -936,7 +964,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     } 
     
     /**
-    * add text input to Wordpress style form which is tabled and has optional HTML5 support
+    * add text input to WordPress style form which is tabled and has optional HTML5 support
     * 
     * 1. the $capability value is set systematically, by default it is 'active_plugins' so minimum use is fine, it
     * is also not required if forms are being hidden from users who shouldnt see them. The security is there as a 
@@ -1008,7 +1036,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     }
     
     /**
-    * table row with two choice radio group styled by Wordpress and used for switch type settings
+    * table row with two choice radio group styled by WordPress and used for switch type settings
     * 
     * $current_value should be enabled or disabled, use another method and do not change this if you need other values
     *     
@@ -1135,7 +1163,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     }
     
     /**
-    * HTML form textarea with Wordpress table structure.
+    * HTML form textarea with WordPress table structure.
     * 
     * @param mixed $title
     * @param mixed $id
@@ -1170,14 +1198,10 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     /**
     * Basic form menu within table row.
     * 
-    * @param mixed $title
-    * @param mixed $id
-    * @param mixed $name
-    * @param mixed $array
-    * @param mixed $current
-    * @param mixed $defaultvalue
-    * @param mixed $defaulttitle
-    * @param mixed $validation
+    * @author Ryan R. Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.2
     */
     public function input_menu(){
         ?>
@@ -1187,15 +1211,31 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
             <td>            
                 <select name="<?php echo $this->inputname;?>" id="<?php echo $this->inputid;?>"<?php if( isset( $this->disabled ) && $this->disabled === true ){ echo ' disabled'; } ?>>
                     <?php
-                    if( isset( $this->defaultvalue ) ) {
-                        if( $this->defaultvalue != 'notrequired123' && $this->defaultvalue != 'notrequired123' ){
-                            echo '<option selected="selected" value="notrequired123">Not Required</option>';
-                        }                    
+                    // apply default item - it should be selected on a form that has never been used
+                    // we will add default item if just one part of it has been set
+                    if( isset( $this->defaultitem_name ) || isset( $this->defaultitem_value ) ) {
+                        
+                        // set the visible item name
+                        if( !isset( $this->defaultitem_name ) ) {
+                            $def_item_name = __( 'Not Selected', 'wtgportalmanager' );
+                        } else {
+                            $def_item_name = $this->defaultitem_name;
+                        }   
+                        
+                        // set the item value
+                        if( !isset( $this->defaultitem_value ) ) {
+                            $def_item_value = __( 'notselected123', 'wtgportalmanager' );
+                        } else {
+                            $def_item_value = $this->defaultitem_value;
+                        } 
+                        
+                        echo '<option selected="selected" value="' . $def_item_value . '">' . $def_item_name . '</option>';
                     }
                     
-                    $selected = '';            
+                                
                     foreach( $this->itemsarray as $key => $option_title ){
                         
+                        $selected = '';
                         if( $key == $this->currentvalue ){
                             $selected = 'selected="selected"';
                         } 
@@ -1217,7 +1257,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * @param mixed $label
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.1
     */
@@ -1386,7 +1426,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
                 }
             }
             
-            // add post last, if none of the previous post types are the default, then we display this as default as it would be in Wordpress
+            // add post last, if none of the previous post types are the default, then we display this as default as it would be in WordPress
             $post_default = '';
             if(!$current_applied){
                 $post_default = 'checked="checked"';            
@@ -1479,7 +1519,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     }      
     
     /**
-    * A table row with menu of all Wordpress capabilities
+    * A table row with menu of all WordPress capabilities
     * 
     * @param mixed $title
     * @param mixed $id
@@ -1629,7 +1669,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Hidden input, basic parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1641,7 +1681,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Data and time - group of fields as used on Edit Post screen by WP.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1653,7 +1693,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Text input with basic parameters for common requirements. 
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1665,7 +1705,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Form menu with common parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1677,7 +1717,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * File upload input with common parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1689,7 +1729,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Radiogroup with common parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1704,7 +1744,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * 2. No maximum number of checks (use advanced instead)
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.1
     */
@@ -1716,7 +1756,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Text area input with common parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1728,7 +1768,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Switch configuration (two radios for switching between two states, modes)
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1740,7 +1780,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Hidden input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1752,7 +1792,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Data and time input group with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1764,7 +1804,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Text input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1776,7 +1816,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Menu input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1788,7 +1828,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * File upload input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1800,7 +1840,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Radiogroup input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1812,7 +1852,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Checkboxes input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.1
     */                                                                                                                                                                                                        
@@ -1824,7 +1864,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Text area input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1836,7 +1876,7 @@ class WTGCSVEXPORTER_Formbuilder extends WTGCSVEXPORTER_UI {
     * Switch setup (using two radios) with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */

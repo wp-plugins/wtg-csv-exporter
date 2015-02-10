@@ -31,7 +31,7 @@ class CSV2POST_Pluginupdate_View extends CSV2POST_View {
      *
      * @var int
      */
-    protected $screen_columns = 2;
+    protected $screen_columns = 1;
     
     protected $view_name = 'pluginupdate';
     

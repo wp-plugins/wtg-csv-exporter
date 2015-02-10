@@ -9,7 +9,7 @@
  * @version 1.0.7
  */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 // install main admin settings option record
@@ -21,25 +21,6 @@ $wtgcsvexporter_settings['standardsettings']['ui_advancedinfo'] = false;// hide 
 // other
 $wtgcsvexporter_settings['standardsettings']['ecq'] = array();
 $wtgcsvexporter_settings['standardsettings']['chmod'] = '0750';
-$wtgcsvexporter_settings['standardsettings']['systematicpostupdating'] = 'enabled';
-// testing and development
-$wtgcsvexporter_settings['standardsettings']['developementinsight'] = 'disabled';
-// global switches
-$wtgcsvexporter_settings['standardsettings']['textspinrespinning'] = 'enabled';// disabled stops all text spin re-spinning and sticks to the last spin
-
-##########################################################################################
-#                                                                                        #
-#                           SETTINGS WITH NO UI OPTION                                   #
-#              array key should be the method/function the setting is used in            #
-##########################################################################################
-$wtgcsvexporter_settings['create_localmedia_fromlocalimages']['destinationdirectory'] = 'wp-content/uploads/importedmedia/';
- 
-##########################################################################################
-#                                                                                        #
-#                            DATA IMPORT AND MANAGEMENT SETTINGS                         #
-#                                                                                        #
-##########################################################################################
-$wtgcsvexporter_settings['datasettings']['insertlimit'] = 100;
 
 ##########################################################################################
 #                                                                                        #
@@ -62,17 +43,6 @@ $wtgcsvexporter_settings['posttypes']['posts']['status'] = 'disabled';
 #                                                                                        #
 ##########################################################################################
 $wtgcsvexporter_settings['noticesettings']['wpcorestyle'] = 'enabled';
-
-##########################################################################################
-#                                                                                        #
-#                           YOUTUBE RELATED SETTINGS                                     #
-#                                                                                        #
-##########################################################################################
-$wtgcsvexporter_settings['youtubesettings']['defaultcolor'] = '&color1=0x2b405b&color2=0x6b8ab6';
-$wtgcsvexporter_settings['youtubesettings']['defaultborder'] = 'enable';
-$wtgcsvexporter_settings['youtubesettings']['defaultautoplay'] = 'enable';
-$wtgcsvexporter_settings['youtubesettings']['defaultfullscreen'] = 'enable';
-$wtgcsvexporter_settings['youtubesettings']['defaultscriptaccess'] = 'always';
 
 ##########################################################################################
 #                                                                                        #

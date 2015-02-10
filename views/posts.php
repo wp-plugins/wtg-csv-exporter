@@ -90,12 +90,12 @@ class WTGCSVEXPORTER_Posts_View extends WTGCSVEXPORTER_View {
     * Displays one or more tables of data at the top of the page before post boxes
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG CSV Exporter Pro
+    * @package WordPress Plugin WTG CSV Exporter Pro
     * @since 0.0.1
     * @version 1.0
     */
     public function datatables( $data, $box ) {       
-        $WPTableObject = new WORDPRESSPLUGINWTGCSVEXPORTER_Posts_Example();
+        $WPTableObject = new WTGCSVEXPORTER_Posts_Example();
         $WPTableObject->prepare_items_further( array(), 10 );
         ?>
 
@@ -197,7 +197,7 @@ class WTGCSVEXPORTER_Posts_View extends WTGCSVEXPORTER_View {
 /**
 * Example of WP List Table class for display on this view only.
 */
-class WORDPRESSPLUGINWTGCSVEXPORTER_Posts_Example extends WP_List_Table {
+class WTGCSVEXPORTER_Posts_Example extends WP_List_Table {
     
     /** ************************************************************************
      * REQUIRED. Set up a constructor that references the parent constructor. We 
