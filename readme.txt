@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: WebTechGlobal
+Contributors: WebTechGlobal, Ryan Bayne
 Donate link: http://www.webtechglobal.co.uk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -8,7 +8,7 @@ Requires at least: 3.8.0
 Tested up to: 4.0.0
 Stable tag: trunk
 
-New multiple file CSV exporter for 2014 by WebTechGlobal. I have company intranets in mind (not just online WP) when planning future updates for this plugin. So whatever you see now is only the early design. 
+New multiple file CSV exporter for 2015 offers export profiles to create the perfect .csv file.
 
 == Description ==
 
@@ -66,6 +66,14 @@ This method is safer than using any other source for the files.
 
 == Changelog == 
 
+= 0.0.3 =
+* Feature Changes
+    * Removed Update view - this corrects installation error on yesterdays update                                         
+* Technical Information
+    * None
+* Known Issues
+    * None
+    
 = 0.0.2 =
 * Feature Changes
     * Default Profiles renamed to Basic Profiles

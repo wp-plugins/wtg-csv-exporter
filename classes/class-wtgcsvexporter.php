@@ -559,7 +559,7 @@ class WTGCSVEXPORTER {
     * after save_post has run." 
     * 
     * @author Ryan R. Bayne
-    * @package CSV 2 POST
+    * @package WTG CSV Exporter
     * @since 0.0.1
     * @version 1.0
     */
@@ -883,114 +883,74 @@ class WTGCSVEXPORTER {
         // step by step installation NOT CURRENTLY IN USE
         $is_installed = self::is_installed(); 
         $is_installed = true;
+
+        // add menu
+        $this->page_hooks[] = add_menu_page( $WTGCSVEXPORTER_Menu['main']['adminmenutitle'], 
+        'WTG CSV Exporter', 
+        'administrator', 
+        'wtgcsvexporter',  
+        $subpage_callback ); 
         
-        // check if installation page should be displayed: Install or Update
-        if(!$is_installed && !isset( $_POST['wtgcsvexporter_plugin_install_now'] ) ){   
-           
-            // if URL user is attempting to visit any screen other than page=wtgcsvexporter then redirect to it
-            if( isset( $_GET['page'] ) && strstr( $_GET['page'], 'wtgcsvexporter_' ) ){
-                wp_redirect( get_bloginfo( 'url' ) . '/wp-admin/admin.php?page=wtgcsvexporter' );           
-                exit;    
-            }
-           
-            // if plugin not installed
-            $this->page_hooks[] = add_menu_page( __( 'Install' ), 
-            __( 'Install WTG CSV Exporter' ), 
-            'administrator', 
-            'wtgcsvexporter', 
-            $subpage_callback );
-            
-        }elseif( isset( $c2p_currentversion) 
-        && isset( $installed_version) 
-        && $installed_version != false
-        && $c2p_currentversion > $installed_version){
-            
-            // if URL user is attempting to visit any screen other than page=wtgcsvexporter then redirect to it
-            if( isset( $_GET['page'] ) && strstr( $_GET['page'], 'wtgcsvexporter_' && $_GET['page'] !== 'wtgcsvexporter_pluginupdate' ) ){
-                wp_redirect( get_bloginfo( 'url' ) . '/wp-admin/admin.php?page=wtgcsvexporter_pluginupdate' );
-                exit;    
-            }
-                    
-            // if $installed_version = false it indicates no installation so we should not be displaying an update screen
-            // update screen will be displayed after installation submission if this is not in place
-            
-            // add menu
-            $this->page_hooks[] = add_menu_page( __( 'Update' ), 
-            __( 'WTG CSV Exporter Update Ready' ), 
-            'administrator', 
-            'wtgcsvexporter_pluginupdate',  
-            $subpage_callback );
-            
-        }else{
-                
-            // add menu
-            $this->page_hooks[] = add_menu_page( $WTGCSVEXPORTER_Menu['main']['adminmenutitle'], 
-            'WTG CSV Exporter', 
-            'administrator', 
-            'wtgcsvexporter',  
-            $subpage_callback ); 
-            
-            // help tab                                                 
-            add_action( 'load-toplevel_page_wtgcsvexporter', array( $this, 'help_tab' ) );
-   
-            // track which group has already been displayed using the parent name
-            $groups = array();
-            
-            // remove arrayinfo from the menu array
-            unset( $WTGCSVEXPORTER_Menu['arrayinfo'] );
-            
-            // get all group menu titles
-            $group_titles_array = array();
-            foreach( $WTGCSVEXPORTER_Menu as $key_pagename => $page_array ){ 
-                if( $page_array['tabgroupparent'] === 'parent' ){                
-                    $group_titles_array[ $page_array['tabgroup'] ]['grouptitle'] = $page_array['adminmenutitle'];
-                }
-            }          
-            
-            // loop through sub-pages - remove pages that are not to be registered
-            foreach( $WTGCSVEXPORTER_Menu as $key_pagename => $page_array ){                 
+        // help tab                                                 
+        add_action( 'load-toplevel_page_wtgcsvexporter', array( $this, 'help_tab' ) );
 
-                // if not visiting this plugins pages, simply register all the parents
-                if( !isset( $_GET['page'] ) || !strstr( $_GET['page'], 'wtgcsvexporter' ) ){
-                    
-                    // remove none parents
-                    if( $page_array['tabgroupparent'] !== 'parent' ){    
-                        unset( $WTGCSVEXPORTER_Menu[ $key_pagename ] ); 
-                    }        
+        // track which group has already been displayed using the parent name
+        $groups = array();
+        
+        // remove arrayinfo from the menu array
+        unset( $WTGCSVEXPORTER_Menu['arrayinfo'] );
+        
+        // get all group menu titles
+        $group_titles_array = array();
+        foreach( $WTGCSVEXPORTER_Menu as $key_pagename => $page_array ){ 
+            if( $page_array['tabgroupparent'] === 'parent' ){                
+                $group_titles_array[ $page_array['tabgroup'] ]['grouptitle'] = $page_array['adminmenutitle'];
+            }
+        }          
+        
+        // loop through sub-pages - remove pages that are not to be registered
+        foreach( $WTGCSVEXPORTER_Menu as $key_pagename => $page_array ){                 
+
+            // if not visiting this plugins pages, simply register all the parents
+            if( !isset( $_GET['page'] ) || !strstr( $_GET['page'], 'wtgcsvexporter' ) ){
                 
-                }elseif( isset( $_GET['page'] ) && strstr( $_GET['page'], 'wtgcsvexporter' ) ){
-                    
-                    // remove pages that are not the main, the current visited or a parent
-                    if( $key_pagename !== 'main' && $page_array['longname'] !== $_GET['page'] && $page_array['tabgroupparent'] !== 'parent' ){
-                        unset( $WTGCSVEXPORTER_Menu[ $key_pagename ] );
-                    }     
-                    
-                } 
+                // remove none parents
+                if( $page_array['tabgroupparent'] !== 'parent' ){    
+                    unset( $WTGCSVEXPORTER_Menu[ $key_pagename ] ); 
+                }        
+            
+            }elseif( isset( $_GET['page'] ) && strstr( $_GET['page'], 'wtgcsvexporter' ) ){
                 
-                // remove the parent of a group for the visited page
-                if( isset( $_GET['page'] ) && $page_array['longname'] === $_GET['page'] ){
-                    unset( $WTGCSVEXPORTER_Menu[ $WTGCSVEXPORTER_Menu[ $key_pagename ]['tabgroupparent'] ] );
-                }
-                
-                // remove update page as it is only meant to show when new version of files applied
-                if( $page_array['longname'] == 'wtgcsvexporter_pluginupdate' ) {
+                // remove pages that are not the main, the current visited or a parent
+                if( $key_pagename !== 'main' && $page_array['longname'] !== $_GET['page'] && $page_array['tabgroupparent'] !== 'parent' ){
                     unset( $WTGCSVEXPORTER_Menu[ $key_pagename ] );
-                }
-            }
-
-            foreach( $WTGCSVEXPORTER_Menu as $key_pagename => $page_array ){ 
+                }     
                 
-                $this->page_hooks[] = add_submenu_page( $page_array['menu'], 
-                       $group_titles_array[ $page_array['tabgroup'] ]['grouptitle'], 
-                       $group_titles_array[ $page_array['tabgroup'] ]['grouptitle'], 
-                       self::get_page_capability( $key_pagename ), 
-                       $WTGCSVEXPORTER_Menu[ $key_pagename ]['longname'], 
-                       $subpage_callback );     
-
-                    // help tab                                                 
-                    add_action( 'load-wtgcsvexporter_page_wtgcsvexporter_' . $key_pagename, array( $this, 'help_tab' ) );       
-                              
+            } 
+            
+            // remove the parent of a group for the visited page
+            if( isset( $_GET['page'] ) && $page_array['longname'] === $_GET['page'] ){
+                unset( $WTGCSVEXPORTER_Menu[ $WTGCSVEXPORTER_Menu[ $key_pagename ]['tabgroupparent'] ] );
             }
+            
+            // remove update page as it is only meant to show when new version of files applied
+            if( $page_array['longname'] == 'wtgcsvexporter_pluginupdate' ) {
+                unset( $WTGCSVEXPORTER_Menu[ $key_pagename ] );
+            }
+        }
+
+        foreach( $WTGCSVEXPORTER_Menu as $key_pagename => $page_array ){ 
+            
+            $this->page_hooks[] = add_submenu_page( $page_array['menu'], 
+                   $group_titles_array[ $page_array['tabgroup'] ]['grouptitle'], 
+                   $group_titles_array[ $page_array['tabgroup'] ]['grouptitle'], 
+                   self::get_page_capability( $key_pagename ), 
+                   $WTGCSVEXPORTER_Menu[ $key_pagename ]['longname'], 
+                   $subpage_callback );     
+
+                // help tab                                                 
+                add_action( 'load-wtgcsvexporter_page_wtgcsvexporter_' . $key_pagename, array( $this, 'help_tab' ) );       
+                          
         }
     }
     
@@ -2597,7 +2557,7 @@ class WTGCSVEXPORTER {
     /**
     * Create new posts/pages
     * 
-    * CURRENTLY NOT READY FOR USE - was taking from CSV 2 POST but not suitable to call in general use yet
+    * CURRENTLY NOT READY FOR USE - was taking from WTG CSV Exporter but not suitable to call in general use yet
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
@@ -2643,7 +2603,7 @@ class WTGCSVEXPORTER {
     * 1. can pass a post ID and force update even if imported row has not changed
     * 2. Do not pass a post ID and query is done to get changed imported rows only to avoid over processing
     * 
-    * CURRENTLY NOT READY FOR USE - was taking from CSV 2 POST but not suitable to call in general use yet
+    * CURRENTLY NOT READY FOR USE - was taking from WTG CSV Exporter but not suitable to call in general use yet
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
