@@ -104,6 +104,8 @@ abstract class WTGCSVEXPORTER_View {
      * @since 0.0.1
      */
     public function __construct() {
+        global $wtgcsvexporter_menu_array;
+        
         $screen = get_current_screen();
           
         // discontinue if the view is dashboard, this class is loaded by view classes while processes dashboard widgets
@@ -119,8 +121,7 @@ abstract class WTGCSVEXPORTER_View {
         add_filter( "get_user_option_screen_layout_{$screen->id}", array( $this, 'set_current_screen_layout_columns' ) ); 
        
         // load classes
-        $this->WTGCSVEXPORTER = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER', 'class-wtgcsvexporter.php', 'classes' );        
-        $this->Tabmenu = $this->WTGCSVEXPORTER->load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
+        $this->WTGCSVEXPORTER = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER', 'class-wtgcsvexporter.php', 'classes' ); 
         $this->Help = $this->WTGCSVEXPORTER->load_class( 'WTGCSVEXPORTER_Help', 'class-help.php', 'classes' );
         $this->PHP = $this->WTGCSVEXPORTER->load_class( 'WTGCSVEXPORTER_PHP', 'class-phplibary.php', 'classes' );
         $this->UI = $this->WTGCSVEXPORTER->load_class( 'WTGCSVEXPORTER_UI', 'class-ui.php', 'classes' );
@@ -128,9 +129,6 @@ abstract class WTGCSVEXPORTER_View {
         // load the help array
         $this->help_array = $this->Help->get_help_array();
 
-        // call the menu_array
-        $this->menu_array = $this->Tabmenu->menu_array();
-                
         // get page name i.e. wtgcsvexporter_page_wtgcsvexporter_affiliates would return affiliates
         $page_name = $this->PHP->get_string_after_last_character( $screen->id, '_' );
         
@@ -274,8 +272,7 @@ abstract class WTGCSVEXPORTER_View {
         $this->UI = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_UI', 'class-ui.php', 'classes' ); 
         $this->DB = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_DB', 'class-wpdb.php', 'classes' );
         $this->PHP = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_PHP', 'class-phplibrary.php', 'classes' );
-        $this->TabMenu = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
-                       
+   
         // loop through array of meta boxes, which doubles as our array of dashboard widgets      
         foreach( $meta_box_array as $key => $metabox ) {
             
@@ -303,7 +300,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     *
     * @param string $text Text for the header message
@@ -318,7 +315,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     *
     * @param array $action_messages Action messages for the screen
@@ -335,7 +332,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     *
     * @param string $id Unique HTML ID for the text box container (only visible with $wrap = true)
@@ -363,7 +360,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     * 
     * @uses add_meta_box()
@@ -386,7 +383,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @since 0.0.1
@@ -414,7 +411,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @since 0.0.1
@@ -456,7 +453,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @since 0.0.1
@@ -478,7 +475,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @since 0.0.1
@@ -496,7 +493,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @since 0.0.1
@@ -513,15 +510,14 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
-    * @version 1.0
+    * @since 0.0.1
+    * @version 1.1
     */       
     public function render() { 
-
-        global $c2p_tab_number, $wpecus_settings, $c2pm;
+        global $wtgcsvexporter_menu_array;
 
         // get the admin page name (slug in menu array, without prepend "wtgcsvexporter_")
-        $admin_page = $this->UI->get_admin_page_name();
+        $admin_page = $this->WTGCSVEXPORTER->get_admin_page_name();
         
         // if we are on the main page change $admin_page to 'main' as that is what we use in array
         if( $admin_page === 'wtgcsvexporter' ){
@@ -529,10 +525,10 @@ abstract class WTGCSVEXPORTER_View {
         }   
          
         // view header - includes notices output and some admin side automation such as conflict prevention
-        $this->WTGCSVEXPORTER->pageheader( $this->menu_array[ $admin_page ]['viewtitle'], 0);
+        $this->WTGCSVEXPORTER->pageheader( $wtgcsvexporter_menu_array[ $admin_page ]['viewtitle'], 0);
                                
         // create tab menu for the giving page if the section has two or more pages
-        if( !isset( $this->menu_array[ $admin_page ]['tabmenu'] ) || $this->menu_array[ $admin_page ]['tabmenu'] === true ) {
+        if( !isset( $wtgcsvexporter_menu_array[ $admin_page ]['tabmenu'] ) || $wtgcsvexporter_menu_array[ $admin_page ]['tabmenu'] === true ) {
             if( $admin_page !== 'main' ) {
                 $this->WTGCSVEXPORTER->build_tab_menu( $admin_page );
             }
@@ -580,7 +576,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     *
     * @param array $data Data for this screen
@@ -600,7 +596,7 @@ abstract class WTGCSVEXPORTER_View {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     */
     protected function help_tab_content() {

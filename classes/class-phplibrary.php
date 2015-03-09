@@ -18,8 +18,8 @@ class WTGCSVEXPORTER_PHP {
     * Performs a var_dump if debug_mode active (debug_mode is only active when on installation blog unless manually activated)
     */
     public function var_dump( $value, $header = false, $append = '<br>' ){
-        global $c2p_debug_mode;
-        if( $c2p_debug_mode){
+        global $wtgcsvexporter_debug_mode;
+        if( $wtgcsvexporter_debug_mode){
             if( $header !== false ){echo '<h1>'.$header.'</h1>';}
             echo '<pre>';
             var_dump( $value );
@@ -393,8 +393,8 @@ class WTGCSVEXPORTER_PHP {
     * @param mixed $version
     */
     public function arrayinfo_set( $array, $line, $function, $file ){
-        global $c2p_currentversion;
-        $array['arrayinfo']['version'] = $c2p_currentversion;
+        global $wtgcsvexporter_currentversion;
+        $array['arrayinfo']['version'] = $wtgcsvexporter_currentversion;
         $array['arrayinfo']['line'] = $line;
         $array['arrayinfo']['function'] = $function;
         $array['arrayinfo']['file'] = $file;
@@ -694,8 +694,8 @@ class WTGCSVEXPORTER_PHP {
     * @param mixed $string
     */
     public function line_dump( $line, $string = 'Line Number: ' ){
-        global $c2p_debug_mode;
-        if( $c2p_debug_mode){
+        global $wtgcsvexporter_debug_mode;
+        if( $wtgcsvexporter_debug_mode){
             print $string .' '. $line .'<br>';
         }
     }  

@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 * 
 * @author Ryan R. Bayne
 * @package WTG CSV Exporter
-* @since 7.0.0
+* @since 0.0.1
 * @version 1.0 
 */
 class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {     
@@ -40,7 +40,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     * @version 1.0
     */
     public function add_dashboard_widgets() {
-        global $wtgcsvexporter_settings;
+        global $wtgcsvexporter_settings, $wtgcsvexporter_menu_array;
                      
         // if dashboard widgets switch not enabled or does not exist return now and avoid registering widgets
         if( !isset( $wtgcsvexporter_settings['widgetsettings']['dashboardwidgetsswitch'] ) || $wtgcsvexporter_settings['widgetsettings']['dashboardwidgetsswitch'] !== 'enabled' ) {
@@ -60,14 +60,11 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
         ); 
          */
                      
-        ########################
-        #                      #
-        #   ADVANCED WIDGETS   #
-        #                      #
-        ########################
-        $WTGCSVEXPORTER_TabMenu = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        $menu_array = $WTGCSVEXPORTER_TabMenu->menu_array();
-        foreach( $menu_array as $key => $section_array ) {
+        #################################################################
+        #                                                               #
+        #                       ADVANCED WIDGETS                        #
+        #                                                               #
+        foreach( $wtgcsvexporter_menu_array as $key => $section_array ) {
             
             // has the current view been activated for dashboard widgets, if not continue to the next view
             if( !isset( $wtgcsvexporter_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] ) ) {       
@@ -144,9 +141,9 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     } 
 
     public function screens_menuoptions( $current){
-        global $c2pm;
-        foreach( $c2pm as $page_slug => $page_array ){ 
-            foreach( $c2pm[$page_slug]['tabs'] as $whichvalue => $screen_array ){
+        global $wtgcsvexporter_menu_array;
+        foreach( $wtgcsvexporter_menu_array as $page_slug => $page_array ){ 
+            foreach( $wtgcsvexporter_menu_array[$page_slug]['tabs'] as $whichvalue => $screen_array ){
                 $selected = '';
                 if( $screen_array['slug'] == $current){
                     $selected = 'selected="selected"';    
@@ -157,29 +154,29 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     }
     
     public function page_menuoptions( $current, $return = false ){
-        global $c2pm;
-        foreach( $c2pm as $page_slug => $page_array ){ 
+        global $wtgcsvexporter_menu_array;
+        foreach( $wtgcsvexporter_menu_array as $page_slug => $page_array ){ 
             $selected = '';
             if( $page_slug == $current){
                 $selected = 'selected="selected"';    
             }
             
             if( $return){
-                return '<option value="'.$page_slug.'" '.$selected.'>'.$c2pm[$page_slug]['viewtitle'].'</option>';
+                return '<option value="'.$page_slug.'" '.$selected.'>'.$wtgcsvexporter_menu_array[$page_slug]['viewtitle'].'</option>';
             }else{ 
-                echo '<option value="'.$page_slug.'" '.$selected.'>'.$c2pm[$page_slug]['viewtitle'].'</option>';
+                echo '<option value="'.$page_slug.'" '.$selected.'>'.$wtgcsvexporter_menu_array[$page_slug]['viewtitle'].'</option>';
             }
         }    
     }
     
-    public function screenintro( $c2p_page_name, $text, $progress_array ){
+    public function screenintro( $page_name, $text, $progress_array ){
         global $wtgcsvexporter_settings;
         
         echo '
         <div class="wtgcsvexporter_screenintro_container">
             <div class="welcome-panel">
             
-                <h3>'. ucfirst( $c2p_page_name) . ' ' . __( 'Development Insight', 'wtgcsvexporter' ) .'</h3>
+                <h3>'. ucfirst( $page_name) . ' ' . __( 'Development Insight', 'wtgcsvexporter' ) .'</h3>
                 
                 <div class="welcome-panel-content">
                     <p class="about-description">'. ucfirst( $text) .'...</p>
@@ -501,55 +498,6 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     }
     
     /**
-    * Form menu wrapped in WP admin styled table row
-    * 
-    * values are numeric, items are numeric
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG CSV Exporter
-    * @since 0.0.1
-    * @version 1.0
-    * 
-    * @param mixed $title
-    * @param mixed $name
-    * @param mixed $id
-    * @param mixed $current
-    * @param mixed $validation
-    */
-    public function option_menu_datasources( $title = 'Data Source', $name = 'datasource', $id = 'datasource', $current = false ){
-        self::register_input_validation( $title, $name, $id, 'numeric' );// stored data is used to apply correct validation during processing
-        
-        global $wpdb;
-        $query_results = $this->DB->selectwherearray( $wpdb->c2psources, 'sourceid = sourceid', 'sourceid', '*' );?>
-        <!-- Option Start -->        
-        <tr valign="top">
-            <th scope="row"><label for="<?php echo $id; ?>"><?php echo $title; ?></label></th>
-            <td>            
-                <select name="<?php echo $name;?>" id="<?php echo $id;?>">
-                    <?php                  
-                    $selected = '';            
-                    foreach( $query_results as $key => $source_array ){
-                        
-                        if( $source_array['sourceid'] == $current){
-                            $selected = 'selected="selected"';
-                        } 
-                        
-                        // create item name
-                        $item_name = $source_array['sourceid'];
-                        if( isset( $source_array['name'] ) ) {
-                            $item_name . ' - ' . $source_array['name'];
-                        } 
-                        
-                        echo '<option '.$selected.' value="'.$source_array['sourceid'].'">' . $item_name . '</option>';    
-                    }
-                    ?>
-                </select>                  
-            </td>
-        </tr>
-        <!-- Option End --><?php         
-    }    
-    
-    /**
     * outputs a single html checkbox with label
     * 
     * wrap in <fieldset><legend class="screen-reader-text"><span>Membership</span></legend></fieldset>
@@ -864,57 +812,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
             </td>
         </tr><?php 
     }      
-    
-    /**
-    * removes plugins name from $_GET['page'] and returns the rest, else returns main to indicate parent
-    * 
-    * @author Ryan Bayne
-    * @package WTG CSV Exporter
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function get_admin_page_name() {
-        if( !isset( $_GET['page'] ) ){
-            return 'main';
-        }
-        $exloded = explode( '_', $_GET['page'] );
-        return end( $exloded );        
-    }
-    
-    /**
-    * Add hidden form fields, to help with processing and debugging
-    * Adds the _form_processing_required value, required to call the form validation file
-    *
-    * @param integer $pageid (the id used in page menu array )
-    * @param slug $panel_name (panel name form is in)
-    * @param string $panel_title (panel title form is in)
-    * @param integer $panel_number (the panel number form is in),(tab number passed instead when this function called for support button row)
-    * @param integer $step (1 = confirm form, 2 = process request, 3+ alternative processing)
-    * 
-    * @deprecated use the copy in class-forms.php, do not delete this function until the class-forms.php is well tested
-    */
-    public function hidden_form_values( $form_name, $form_title, $return = false ){
-        global $c2p_page_name;
-        $form_name = strtolower( $form_name );          
-        if( $return ){
-            $form = '';
-            $form .= wp_nonce_field( $form_name );// form name is used during processing to complete the security 
-            $form .= '<input type="hidden" name="wtgcsvexporter_admin_action" value="true">';
-            $form .= '<input type="hidden" name="wtgcsvexporter_hidden_pagename" value="' . $c2p_page_name . '">';
-            $form .= '<input type="hidden" name="wtgcsvexporter_form_formid" value="' . $form_name . '">';
-            $form .= '<input type="hidden" name="wtgcsvexporter_form_name" value="' . $form_name . '">';
-            $form .= '<input type="hidden" name="wtgcsvexporter_form_title" value="' . $form_title . '">'; 
-            return $form;           
-        } else {
-            wp_nonce_field( $form_name );// form name is used during processing to complete the security  
-            echo '<input type="hidden" name="wtgcsvexporter_admin_action" value="true">';
-            echo '<input type="hidden" name="wtgcsvexporter_hidden_pagename" value="' . $c2p_page_name . '">';
-            echo '<input type="hidden" name="wtgcsvexporter_form_formid" value="' . $form_name . '">';
-            echo '<input type="hidden" name="wtgcsvexporter_form_name" value="' . $form_name . '">';
-            echo '<input type="hidden" name="wtgcsvexporter_form_title" value="' . $form_title . '">';
-        }
-    }
-        
+
     /**
     * displays a vertical list of optional icons, for use inside panels
     * 
@@ -930,8 +828,6 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
         if( WTGCSVEXPORTER::is_dashboard() ) {
             return false;    
         }
-        
-        global $c2pm, $c2p_page_name, $c2p_tab_number;
         
         // load help array
         $WTGCSVEXPORTER_Help = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_Help', 'class-help.php', 'classes' );
@@ -1057,7 +953,6 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     * @version 1.0
     */          
     public function box_information_icon( $page_name, $view_name, $form_id ) {
-        global $c2pm, $c2p_page_name, $c2p_tab_number;
         add_thickbox();
         
         $WTGCSVEXPORTER_Help = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_Help', 'class-help.php', 'classes' );
@@ -1094,7 +989,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
             $all_help_content .= '.</p>';
         }
 
-        // add a link to a Youtube
+        // add a link to a forum discussion
         if( isset( $help_array[ $page_name ][ $view_name ][ 'forms' ][ $form_id ][ 'formdiscussurl' ] ) ){
             $all_help_content .= '<p>';
             $all_help_content .= __( 'We invite you to take discuss', 'wtgcsvexporter' ) . ' ';
@@ -1149,15 +1044,15 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     public function get_notice_array() {
         $a = get_option( 'wtgcsvexporter_notifications' );
        
-        $c2p_notice_array = maybe_unserialize( $a);
-        if(!is_array( $c2p_notice_array ) ){
+        $wtgcsvexporter_notice_array = maybe_unserialize( $a);
+        if(!is_array( $wtgcsvexporter_notice_array ) ){
             return array();    
         }
         
         // delete some expired admin notices
-        if( isset( $c2p_notice_array['admin'] ) )
+        if( isset( $wtgcsvexporter_notice_array['admin'] ) )
         {
-            foreach( $c2p_notice_array['admin'] as $key => $notice){
+            foreach( $wtgcsvexporter_notice_array['admin'] as $key => $notice){
                 
                 if( isset( $notice['created'] ) )
                 {
@@ -1165,20 +1060,20 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
                     
                     if( $projected < time() )
                     {
-                        unset( $c2p_notice_array['admin'][$key] );    
+                        unset( $wtgcsvexporter_notice_array['admin'][$key] );    
                     }                                               
                 }
                 else
                 {       
-                    unset( $c2p_notice_array['admin'][$key] );
+                    unset( $wtgcsvexporter_notice_array['admin'][$key] );
                 }
             }
         }
       
         // delete some expired user notices
-        if( isset( $c2p_notice_array['users'] ) ){
+        if( isset( $wtgcsvexporter_notice_array['users'] ) ){
  
-            foreach( $c2p_notice_array['users'] as $owner_id => $owners_notices){
+            foreach( $wtgcsvexporter_notice_array['users'] as $owner_id => $owners_notices){
                 
                 foreach( $owners_notices as $key => $notice)
                 {
@@ -1188,24 +1083,24 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
                         
                         if( $projected < time() )
                         {
-                            unset( $c2p_notice_array['users'][$key] );    
+                            unset( $wtgcsvexporter_notice_array['users'][$key] );    
                         }                                               
                     }
                     else
                     {
-                        unset( $c2p_notice_array['users'][$key] );
+                        unset( $wtgcsvexporter_notice_array['users'][$key] );
                     }
                 }
             }   
         }     
            
         // any notices unset due to expiry will be reflected in update during display procedure        
-        return $c2p_notice_array;    
+        return $wtgcsvexporter_notice_array;    
     }
     
     public function update_notice_array() {
-        global $c2p_notice_array;      
-        return update_option( 'wtgcsvexporter_notifications',maybe_serialize( $c2p_notice_array ) );    
+        global $wtgcsvexporter_notice_array;      
+        return update_option( 'wtgcsvexporter_notifications',maybe_serialize( $wtgcsvexporter_notice_array ) );    
     }    
      
     /**
@@ -1286,7 +1181,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     * @param mixed $sensitive
     */
     public function create_notice( $message, $type = 'info', $size = 'Small', $title = false, $sensitive = false, $helpurl = false ){
-        global $c2p_notice_array, $current_user;
+        global $wtgcsvexporter_notice_array, $current_user;
                 
         // requires user to be logged in as the first security step
         // return if no current user, this allows us to use create_notice() in functions which are used in both manual and automated procedures                             
@@ -1299,27 +1194,27 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
         // another security step is to add the notice to the notice array with user ID which is checked before displaying
         if( $sensitive === false ) {   
             
-            $c2p_notice_array['notices'][$current_user->ID][$key]['sensitive'] = false;
-            $c2p_notice_array['notices'][$current_user->ID][$key]['message'] = $message;
-            $c2p_notice_array['notices'][$current_user->ID][$key]['type'] = $type;
-            $c2p_notice_array['notices'][$current_user->ID][$key]['size'] = $size;
-            $c2p_notice_array['notices'][$current_user->ID][$key]['title'] = $title; 
-            $c2p_notice_array['notices'][$current_user->ID][$key]['created'] = time();
-            $c2p_notice_array['notices'][$current_user->ID][$key]['helpurl'] = $helpurl;
+            $wtgcsvexporter_notice_array['notices'][$current_user->ID][$key]['sensitive'] = false;
+            $wtgcsvexporter_notice_array['notices'][$current_user->ID][$key]['message'] = $message;
+            $wtgcsvexporter_notice_array['notices'][$current_user->ID][$key]['type'] = $type;
+            $wtgcsvexporter_notice_array['notices'][$current_user->ID][$key]['size'] = $size;
+            $wtgcsvexporter_notice_array['notices'][$current_user->ID][$key]['title'] = $title; 
+            $wtgcsvexporter_notice_array['notices'][$current_user->ID][$key]['created'] = time();
+            $wtgcsvexporter_notice_array['notices'][$current_user->ID][$key]['helpurl'] = $helpurl;
              
         } elseif( $sensitive === true ) {
             
             // another security measure which is optional is to make a sensitive notice which is stored in the 
             // applicable users meta rather than making it part of an array which is printed on-screen
             // then we can display the notice anywhere
-            $c2p_notice_array['users'][$current_user->ID][$key]['sensitive'] = false;
+            $wtgcsvexporter_notice_array['users'][$current_user->ID][$key]['sensitive'] = false;
             
             # to be complete, this procedure will store the notice in user meta with the $key being used in meta_key
             # even when we start using a database table to store all notices, we will do this to avoid that table
             # holding sensitive data. Instead we will try to group subscriber/customer data where some already exists.                         
         }
 
-        return $this->update_notice_array( $c2p_notice_array );
+        return $this->update_notice_array( $wtgcsvexporter_notice_array );
     }
     
     /**
@@ -1344,7 +1239,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     * or there is an expiry. 
     */
     public function create_prompt() {
-        ## $c2p_notice_array['prompts'][$owner][$key]['message'] = $message;    
+        ## $wtgcsvexporter_notice_array['prompts'][$owner][$key]['message'] = $message;    
     }
     
     /**
@@ -1354,7 +1249,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     * b) client actions within their account i.e. invoice request, can create a message for the lead developer of clients project 
     */
     public function create_message() {
-        ## $c2p_notice_array['messages'][$owner][$key]['message'] = $message;    
+        ## $wtgcsvexporter_notice_array['messages'][$owner][$key]['message'] = $message;    
     }
     
     public function display_all() {
@@ -1362,13 +1257,13 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     }
     
     public function display_users_notices() {
-        global $c2p_notice_array, $current_user, $wtgcsvexporter_settings;
+        global $wtgcsvexporter_notice_array, $current_user, $wtgcsvexporter_settings;
         
-        $c2p_notice_array = $this->get_notice_array();
+        $wtgcsvexporter_notice_array = $this->get_notice_array();
         
-        if(!isset( $c2p_notice_array['notices'][$current_user->ID] ) ){return;}
+        if(!isset( $wtgcsvexporter_notice_array['notices'][$current_user->ID] ) ){return;}
  
-        foreach( $c2p_notice_array['notices'][$current_user->ID] as $key => $owners_notices){
+        foreach( $wtgcsvexporter_notice_array['notices'][$current_user->ID] as $key => $owners_notices){
 
             if( isset( $owners_notices['sensitive'] ) && $owners_notices['sensitive'] === true) {
                 # to be complete - this will be used for sensitive information 
@@ -1382,10 +1277,10 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
             }   
 
             // users notices have been displayed, unset to prevent second display
-            unset( $c2p_notice_array['notices'][$current_user->ID] );
+            unset( $wtgcsvexporter_notice_array['notices'][$current_user->ID] );
         }
                                        
-        $this->update_notice_array( $c2p_notice_array );            
+        $this->update_notice_array( $wtgcsvexporter_notice_array );            
     }
         
     /**
@@ -1461,7 +1356,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     * @deprecated please use other functions in the Notice class
     */
     public function n_depreciated( $title, $mes, $style, $size, $atts = array() ){
-        global $c2p_notice_array;
+        global $wtgcsvexporter_notice_array;
                     
         extract( shortcode_atts( array( 
             'url' => false,
@@ -1480,7 +1375,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
         }
                        
         // if return wanted or $side == public (used to bypass is_admin() check)
-        // this allows the notice to be printed within content where the function is called rather than within the $c2p_notice_array loop
+        // this allows the notice to be printed within content where the function is called rather than within the $wtgcsvexporter_notice_array loop
         if( $output == 'return' || $output == 'public' ){
             return $this->notice_display_depreciated( $style, $url, $size, $title, $mes, $clickable, $persistent = false );
         }
@@ -1491,30 +1386,30 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
         }
                 
         // arriving here means normal, most common output to the backend of WordPress
-        $c2p_notice_array = $this->persistentnotifications_array();
+        $wtgcsvexporter_notice_array = $this->persistentnotifications_array();
         
         // set next array key value
         $next_key = 0;
 
         // determine next array key
-        if( isset( $c2p_notice_array['notifications'] ) ){    
-            $next_key = WTGCSVEXPORTER::get_array_nextkey( $c2p_notice_array['notifications'] );
+        if( isset( $wtgcsvexporter_notice_array['notifications'] ) ){    
+            $next_key = WTGCSVEXPORTER::get_array_nextkey( $wtgcsvexporter_notice_array['notifications'] );
         }    
                        
         // add new message to the notifications array
         // this will be output during the current page loading. The notification will show once unless persistent is set to true
-        $c2p_notice_array['notifications'][$next_key]['message'] = $mes;
-        $c2p_notice_array['notifications'][$next_key]['type'] = $style;
-        $c2p_notice_array['notifications'][$next_key]['size'] = $size;
-        $c2p_notice_array['notifications'][$next_key]['title'] = $title;
-        $c2p_notice_array['notifications'][$next_key]['helpurl'] = $url; 
-        $c2p_notice_array['notifications'][$next_key]['output'] = $output;
-        $c2p_notice_array['notifications'][$next_key]['audience'] = $audience;
-        $c2p_notice_array['notifications'][$next_key]['user_mes'] = $user_mes;
-        $c2p_notice_array['notifications'][$next_key]['side'] = $side;
-        $c2p_notice_array['notifications'][$next_key]['clickable'] = $clickable;
+        $wtgcsvexporter_notice_array['notifications'][$next_key]['message'] = $mes;
+        $wtgcsvexporter_notice_array['notifications'][$next_key]['type'] = $style;
+        $wtgcsvexporter_notice_array['notifications'][$next_key]['size'] = $size;
+        $wtgcsvexporter_notice_array['notifications'][$next_key]['title'] = $title;
+        $wtgcsvexporter_notice_array['notifications'][$next_key]['helpurl'] = $url; 
+        $wtgcsvexporter_notice_array['notifications'][$next_key]['output'] = $output;
+        $wtgcsvexporter_notice_array['notifications'][$next_key]['audience'] = $audience;
+        $wtgcsvexporter_notice_array['notifications'][$next_key]['user_mes'] = $user_mes;
+        $wtgcsvexporter_notice_array['notifications'][$next_key]['side'] = $side;
+        $wtgcsvexporter_notice_array['notifications'][$next_key]['clickable'] = $clickable;
                           
-        $this->update_persistentnotifications_array( $c2p_notice_array );
+        $this->update_persistentnotifications_array( $wtgcsvexporter_notice_array );
     } 
     
     /**
@@ -1548,7 +1443,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     * @deprecated do not use this function
     */
     public function notice_depreciated( $message, $type = 'success', $size = 'Extra', $title = false, $helpurl = 'www.webtechglobal.co.uk', $output_type = 'echo', $persistent = false, $clickable = false, $user_type = false ){
-        global $c2p_notice_array;
+        global $wtgcsvexporter_notice_array;
         if( is_admin() || $output_type == 'public' ){
             
             // change unexpected values into expected values (for flexability and to help avoid fault)
@@ -1564,32 +1459,32 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
             }else{
                 // establish next array key
                 $next_key = 0;
-                if( isset( $c2p_notice_array['notifications'] ) ){
-                    $next_key = WTGCSVEXPORTER::get_array_nextkey( $c2p_notice_array['notifications'] );
+                if( isset( $wtgcsvexporter_notice_array['notifications'] ) ){
+                    $next_key = WTGCSVEXPORTER::get_array_nextkey( $wtgcsvexporter_notice_array['notifications'] );
                 }
                 
                 // add new message to the notifications array
-                $c2p_notice_array['notifications'][$next_key]['message'] = $message;
-                $c2p_notice_array['notifications'][$next_key]['type'] = $type;
-                $c2p_notice_array['notifications'][$next_key]['size'] = $size;
-                $c2p_notice_array['notifications'][$next_key]['title'] = $title;
-                $c2p_notice_array['notifications'][$next_key]['helpurl'] = $helpurl; 
-                $c2p_notice_array['notifications'][$next_key]['clickable'] = $clickable; 
+                $wtgcsvexporter_notice_array['notifications'][$next_key]['message'] = $message;
+                $wtgcsvexporter_notice_array['notifications'][$next_key]['type'] = $type;
+                $wtgcsvexporter_notice_array['notifications'][$next_key]['size'] = $size;
+                $wtgcsvexporter_notice_array['notifications'][$next_key]['title'] = $title;
+                $wtgcsvexporter_notice_array['notifications'][$next_key]['helpurl'] = $helpurl; 
+                $wtgcsvexporter_notice_array['notifications'][$next_key]['clickable'] = $clickable; 
                           
-                $this->update_persistentnotifications_array( $c2p_notice_array );       
+                $this->update_persistentnotifications_array( $wtgcsvexporter_notice_array );       
             }
         } 
     }    
     
     /**                                              
-    * Outputs the contents of $c2p_notice_array, used in WTGCSVEXPORTER::pageheader().
+    * Outputs the contents of $wtgcsvexporter_notice_array, used in WTGCSVEXPORTER::pageheader().
     * Will hold new and none persistent notifications. May also hold persistent. 
     */
     public function output_depreciated() {
-        $c2p_notice_array = self::persistentnotifications_array();    
-        if( isset( $c2p_notice_array['notifications'] ) ){
+        $wtgcsvexporter_notice_array = self::persistentnotifications_array();    
+        if( isset( $wtgcsvexporter_notice_array['notifications'] ) ){
                                                         
-            foreach( $c2p_notice_array['notifications'] as $key => $notice){
+            foreach( $wtgcsvexporter_notice_array['notifications'] as $key => $notice){
                                 
                 // persistent notices are handled by another function as the output is different
                 if(!isset( $notice['persistent'] ) || $notice['persistent'] != false ){
@@ -1607,11 +1502,11 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
                     echo $this->notice_display_depreciated( $notice['type'], $notice['helpurl'], $notice['size'], $notice['title'], $notice['message'], $notice['clickable'], $notice['persistent'], $notice['id'] );                                               
                 
                     // notice has been displayed so we now removed it
-                    unset( $c2p_notice_array['notifications'][$key] );
+                    unset( $wtgcsvexporter_notice_array['notifications'][$key] );
                 }
             }
                                
-            $this->update_persistentnotifications_array( $c2p_notice_array );
+            $this->update_persistentnotifications_array( $wtgcsvexporter_notice_array );
         }  
     }
     
@@ -1646,9 +1541,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
      * @return string New admin footer content
      */
     public function _admin_footer_text( $content ) {
-        global $c2p_is_free;
-        $content .= ' &bull; ' . __( 'Thank you for using <a href="http://webtechglobal.co.uk/wtgcsvexporter/">WTG CSV Exporter</a>.', 'wtgcsvexporter' );
-        // FREE EDITIONS ONLY $content .= ' ' . sprintf( __( 'Support the plugin with your <a href="%s">donation</a>!', 'wtgcsvexporter' ), 'http://webtechglobal.co.uk/donate/' );
+        //$content .= ' &bull; ' . __( 'Thank you for using <a href="http://webtechglobal.co.uk/wtgcsvexporter/">WTG CSV Exporter</a>.', 'wtgcsvexporter' );
         return $content;
     } 
     
@@ -1725,7 +1618,7 @@ class WTGCSVEXPORTER_UI extends WTGCSVEXPORTER {
     * @param mixed $values - begin with & followed by values
     */
     public function linkaction( $page, $action, $title = 'WTG CSV Exporter admin link', $text = 'Click Here', $values = '' ){
-        return '<a href="'. wp_nonce_url( admin_url() . 'admin.php?page=' . $page . '&wtgcsvexporteraction=' . $action  . $values, $action ) . '" title="' . $title . '" class="button c2pbutton">' . $text . '</a>';
+        return '<a href="'. wp_nonce_url( admin_url() . 'admin.php?page=' . $page . '&wtgcsvexporteraction=' . $action  . $values, $action ) . '" title="' . $title . '" class="button wtgcsvexporterbutton">' . $text . '</a>';
     }
         
     /**

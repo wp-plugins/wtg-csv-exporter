@@ -64,6 +64,7 @@ class WTGCSVEXPORTER {
         // Other class requiring WordPress hooks start here also, with a method in this main class that calls one or more methods in one or many classes
         // create a method in this class for each hook required plugin wide
         $plugin_actions = array( 
+            array( 'admin_menu',                     'set_admin_globals',                                      'all' ),        
             array( 'admin_menu',                     'admin_menu',                                             'all' ),
             array( 'admin_init',                     'process_admin_POST_GET',                                 'all' ),
             array( 'admin_init',                     'add_adminpage_actions',                                  'all' ), 
@@ -112,18 +113,35 @@ class WTGCSVEXPORTER {
         if( is_admin() ){
         
             // admin globals 
-            global $c2p_notice_array;
+            global $wtgcsvexporter_notice_array;
             
-            $c2p_notice_array = array();// set notice array for storing new notices in (not persistent notices)
+            $wtgcsvexporter_notice_array = array();// set notice array for storing new notices in (not persistent notices)
             
             // load class used from admin only                   
             $this->UI = self::load_class( 'WTGCSVEXPORTER_UI', 'class-ui.php', 'classes' );
             $this->Helparray = self::load_class( 'WTGCSVEXPORTER_Help', 'class-help.php', 'classes' );
-            $this->Tabmenu = self::load_class( "WTGCSVEXPORTER_TabMenu", "class-pluginmenu.php", 'classes','pluginmenu' );    
-        
         }            
     }
     
+    /**
+    * Set variables that are required on most pages.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function set_admin_globals() {
+        global $wtgcsvexporter_menu_array;
+        
+        // set menu array
+        $WTGCSVEXPORTER_TabMenu = self::load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
+        $wtgcsvexporter_menu_array = $WTGCSVEXPORTER_TabMenu->menu_array();    
+        
+        // set page name 
+        $wtgcsvexporter_page_name = self::get_admin_page_name();            
+    }
+        
     /**
     * register admin only .css must be done before printing styles
     * 
@@ -311,8 +329,6 @@ class WTGCSVEXPORTER {
      * @return object Instance of the initialized view, already set up, just needs to be render()ed
      */
     public static function load_draggableboxes_view( $page_slug, array $data = array() ) {
-        global $c2pm;
-        
         // include the view class
         require_once( WTGCSVEXPORTER_ABSPATH . 'classes/class-view.php' );
         
@@ -358,21 +374,9 @@ class WTGCSVEXPORTER {
      * @author Ryan Bayne
      * @package WTG CSV Exporter
      * @since 0.0.1
-     * @version 1.0
+     * @version 1.1
      */
-     public function load_admin_page() {
-        // check if action is a supported action, and whether the user is allowed to access this screen
-        /*
-        if ( ! isset( $this->view_actions[ $action ] ) || ! current_user_can( $this->view_actions[ $action ]['required_cap'] ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'default' ) );
-        }
-        */
-        
-        // load tab menu class which contains help content array
-        $WTGCSVEXPORTER_TabMenu = self::load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        
-        // call the menu_array
-        $menu_array = $WTGCSVEXPORTER_TabMenu->menu_array();        
+     public function load_admin_page() {    
 
         // remove "wtgcsvexporter_" from page value in URL which leaves the page name as used in the menu array
         $page = 'main';
@@ -538,8 +542,8 @@ class WTGCSVEXPORTER {
     * @version 1.0
     */
     public function debugmode() {
-        global $c2p_debug_mode;
-        if( $c2p_debug_mode){
+        global $wtgcsvexporter_debug_mode;
+        if( $wtgcsvexporter_debug_mode){
             global $wpdb;
             ini_set( 'display_errors',1);
             error_reporting(E_ALL);      
@@ -572,7 +576,7 @@ class WTGCSVEXPORTER {
             case 'exampleone':
                 
                 break;
-            case 'c2pnotinuseyet':
+            case 'c 2pnotinuseyet':
                 
                 break;
         } 
@@ -680,6 +684,7 @@ class WTGCSVEXPORTER {
     * @version 1.0.2
     */
     public function help_tab () {
+        global $wtgcsvexporter_menu_array;
                                
         // get the current screen array
         $screen = get_current_screen();
@@ -689,12 +694,6 @@ class WTGCSVEXPORTER {
 
         // call the array
         $help_array = $WTGCSVEXPORTER_Help->get_help_array();
-        
-        // load tab menu class which contains help content array
-        $WTGCSVEXPORTER_TabMenu = self::load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        
-        // call the menu_array
-        $menu_array = $WTGCSVEXPORTER_TabMenu->menu_array();
              
         // get page name i.e. wtgcsvexporter_page_wtgcsvexporter_affiliates would return affiliates
         $page_name = $this->PHP->get_string_after_last_character( $screen->id, '_' );
@@ -703,7 +702,7 @@ class WTGCSVEXPORTER {
         if( $page_name == 'wtgcsvexporter' ){$page_name = 'main';}
      
         // does the page have any help content? 
-        if( !isset( $menu_array[ $page_name ] ) ){
+        if( !isset( $wtgcsvexporter_menu_array[ $page_name ] ) ){
             return false;
         }
         
@@ -742,7 +741,7 @@ class WTGCSVEXPORTER {
             $help_content .= '.</p>';
         }
 
-        // add a link to a Youtube
+        // add a link to a forum discussion
         if( isset( $help_array[ $page_name ][ $view_name ][ 'viewinfo' ][ 'viewdiscussurl' ] ) ){
             $help_content .= '<p>';
             $help_content .= __( 'We invite you to take discuss', 'wtgcsvexporter' ) . ' ';
@@ -792,7 +791,7 @@ class WTGCSVEXPORTER {
                 $help_content .= '.</p>';
             }
 
-            // add a link to a Youtube
+            // add a link to a forum discussion
             if( isset( $value[ 'formdiscussurl' ] ) ){
                 $help_content .= '<p>';
                 $help_content .= __( 'We invite you to discuss', 'wtgcsvexporter' ) . ' ';
@@ -868,11 +867,11 @@ class WTGCSVEXPORTER {
     * @version 1.2.8
     */
     public function admin_menu() { 
-        global $c2p_currentversion, $c2pm, $wtgcsvexporter_settings;
+        global $wtgcsvexporter_currentversion, $wtgcsvexporter_settings, $wtgcsvexporter_menu_array;
          
-        $WTGCSVEXPORTER_TabMenu = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        $WTGCSVEXPORTER_Menu = $WTGCSVEXPORTER_TabMenu->menu_array();
- 
+        // create a new variable for the menu array because we modify it later in this function
+        $WTGCSVEXPORTER_Menu = $wtgcsvexporter_menu_array;
+               
         // set the callback, we can change this during the loop and call methods more dynamically
         // this approach allows us to call the same function for all pages
         $subpage_callback = array( $this, 'show_admin_page' );
@@ -959,19 +958,15 @@ class WTGCSVEXPORTER {
      * 
      * @param string $thepagekey this is the screen being visited
      */
-    public function build_tab_menu( $current_page_name ){           
-        // load tab menu class which contains help content array
-        $WTGCSVEXPORTER_TabMenu = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        
-        // call the menu_array
-        $menu_array = $WTGCSVEXPORTER_TabMenu->menu_array();
-                
+    public function build_tab_menu( $current_page_name ){  
+        global $wtgcsvexporter_menu_array;
+
         echo '<h2 class="nav-tab-wrapper">';
         
         // get the current pages viewgroup for building the correct tab menu
-        $view_group = $menu_array[ $current_page_name ][ 'tabgroup' ];
+        $view_group = $wtgcsvexporter_menu_array[ $current_page_name ][ 'tabgroup' ];
             
-        foreach( $menu_array as $page_name => $values ){
+        foreach( $wtgcsvexporter_menu_array as $page_name => $values ){
                                                          
             if( $values['tabgroup'] === $view_group ){
 
@@ -1049,13 +1044,13 @@ class WTGCSVEXPORTER {
     * 3. This function itself is considered part of the event, we cycle through event types
     * 
     * Debugging Trace
-    * $c2p_schedule_array['history']['trace'] is used to indicate how far the this script went before a return.
+    * $wtgcsvexporter_schedule_array['history']['trace'] is used to indicate how far the this script went before a return.
     * This is a simple way to quickly determine where we are arriving.
     * 
     * @return boolean false if no due events else returns true to indicate event was due and full function ran
     */
     public function event_check() {
-        $c2p_schedule_array = self::get_option_schedule_array();
+        $wtgcsvexporter_schedule_array = self::get_option_schedule_array();
         
         // do not continue if WordPress is DOING_AJAX
         if( self::request_made() ){return;}
@@ -1066,17 +1061,17 @@ class WTGCSVEXPORTER {
         //  get and ensure we have the schedule array
         //  we do not initialize the schedule array as the user may be in the processing of deleting it
         //  do not use wtgcsvexporter_event_refused as we do not want to set the array
-        if(!isset( $c2p_schedule_array ) || !is_array( $c2p_schedule_array ) ){       
+        if(!isset( $wtgcsvexporter_schedule_array ) || !is_array( $wtgcsvexporter_schedule_array ) ){       
             self::log_schedule( __( 'Scheduled events cannot be peformed due to the schedule array of stored settings not existing.', 'wtgcsvexporter' ), __( 'schedule settings missing', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
             return false;
         }
                       
         // check when last event was run - avoid running two events within 1 minute of each other
         // I've set it here because this function could grow over time and we dont want to go through all the checks PER VISIT or even within a few seconds of each other.
-        if( isset( $c2p_schedule_array['history']['lasteventtime'] ) )
+        if( isset( $wtgcsvexporter_schedule_array['history']['lasteventtime'] ) )
         {    
             // increase lasteventtime by 60 seconds
-            $soonest = $c2p_schedule_array['history']['lasteventtime'] + 60;//hack info page http://www.webtechglobal.co.uk/hacking/increase-automatic-events-delay-time
+            $soonest = $wtgcsvexporter_schedule_array['history']['lasteventtime'] + 60;//hack info page http://www.webtechglobal.co.uk/hacking/increase-automatic-events-delay-time
             
             if( $soonest > time() ){
                 self::log_schedule( __( 'No changed made as it has not been 60 seconds since the last event.', 'wtgcsvexporter' ), __( 'enforcing schedule event delay', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1087,9 +1082,9 @@ class WTGCSVEXPORTER {
         else
         {               
             // set lasteventtime value for the first time
-            $c2p_schedule_array['history']['lasteventtime'] = time();
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The last even time event was set for the first time, no further processing was done.', 'wtgcsvexporter' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgcsvexporter_schedule_array['history']['lasteventtime'] = time();
+            $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = __( 'The last even time event was set for the first time, no further processing was done.', 'wtgcsvexporter' );
+            self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
             self::log_schedule( __( 'The plugin initialized the timer for enforcing a delay between events. This action is treated as an event itself and no further
             changes are made during this schedule check.', 'wtgcsvexporter' ), __( 'initialized schedule delay timer', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
 
@@ -1098,11 +1093,11 @@ class WTGCSVEXPORTER {
         }                             
                                            
         // is last event type value set? if not set default as dataupdate, this means postcreation is the next event
-        if(!isset( $c2p_schedule_array['history']['lasteventtype'] ) )
+        if(!isset( $wtgcsvexporter_schedule_array['history']['lasteventtype'] ) )
         {    
-            $c2p_schedule_array['history']['lasteventtype'] = 'dataupdate';
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The last event type value was set for the first time', 'wtgcsvexporter' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgcsvexporter_schedule_array['history']['lasteventtype'] = 'dataupdate';
+            $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = __( 'The last event type value was set for the first time', 'wtgcsvexporter' );
+            self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
 
             self::log_schedule( __( 'The plugin initialized last event type value, this tells the plugin what event was last performed and it is used to
             determine what event comes next.', 'wtgcsvexporter' ), __( 'initialized schedule last event value', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1112,11 +1107,11 @@ class WTGCSVEXPORTER {
         }
                  
         // does the "day_lastreset"" time value exist, if not we set it now then return
-        if(!isset( $c2p_schedule_array['history']['day_lastreset'] ) )
+        if(!isset( $wtgcsvexporter_schedule_array['history']['day_lastreset'] ) )
         {    
-            $c2p_schedule_array['history']['day_lastreset'] = time();
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The last daily reset time was set for the first time', 'wtgcsvexporter' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgcsvexporter_schedule_array['history']['day_lastreset'] = time();
+            $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = __( 'The last daily reset time was set for the first time', 'wtgcsvexporter' );
+            self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
             
             self::log_schedule( __( 'Day timer was set in schedule system. This is the 24 hour timer used to track daily events. It was set, no further action was taking 
             and should only happen once.', 'wtgcsvexporter' ), __( '24 hour timer set', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1126,11 +1121,11 @@ class WTGCSVEXPORTER {
         } 
                                                          
         // does the "hour_lastreset"" time value exist, if not we set it now then return
-        if(!isset( $c2p_schedule_array['history']['hour_lastreset'] ) )
+        if(!isset( $wtgcsvexporter_schedule_array['history']['hour_lastreset'] ) )
         { 
-            $c2p_schedule_array['history']['hour_lastreset'] = time();
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The hourly reset time was set for the first time', 'wtgcsvexporter' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgcsvexporter_schedule_array['history']['hour_lastreset'] = time();
+            $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = __( 'The hourly reset time was set for the first time', 'wtgcsvexporter' );
+            self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
             
             self::log_schedule( __( 'Hourly timer was set in schedule system. The time has been set for hourly countdown. No further action was 
             taking. This should only happen once.', 'wtgcsvexporter' ), __( 'one hour timer set', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);        
@@ -1140,22 +1135,22 @@ class WTGCSVEXPORTER {
         }    
                
         // does the hourcounter value exist, if not we set it now then return (this is to initialize the variable)
-        if(!isset( $c2p_schedule_array['history']['hourcounter'] ) )
+        if(!isset( $wtgcsvexporter_schedule_array['history']['hourcounter'] ) )
         {     
-            $c2p_schedule_array['history']['hourcounter'] = 0;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The hourly events counter was set for the first time', 'wtgcsvexporter' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgcsvexporter_schedule_array['history']['hourcounter'] = 0;
+            $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = __( 'The hourly events counter was set for the first time', 'wtgcsvexporter' );
+            self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
             self::log_schedule( __( 'Number of events per hour has been set for the first time, this change is treated as an event.', 'wtgcsvexporter' ), __( 'hourly events counter set', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);     
             self::event_return( __( 'initialised hourly events counter', 'wtgcsvexporter' ) );   
             return;
         }     
                                      
         // does the daycounter value exist, if not we set it now then return (this is to initialize the variable)
-        if(!isset( $c2p_schedule_array['history']['daycounter'] ) )
+        if(!isset( $wtgcsvexporter_schedule_array['history']['daycounter'] ) )
         {
-            $c2p_schedule_array['history']['daycounter'] = 0;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The daily events counter was set for the first time', 'wtgcsvexporter' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgcsvexporter_schedule_array['history']['daycounter'] = 0;
+            $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = __( 'The daily events counter was set for the first time', 'wtgcsvexporter' );
+            self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
             self::log_schedule( __( 'The daily events counter was not set. No further action was taking. This measure should only happen once.', 'wtgcsvexporter' ), __( 'daily events counter set', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);     
             self::event_return( __( 'initialised daily events counter', 'wtgcsvexporter' ) );           
             return;
@@ -1163,29 +1158,29 @@ class WTGCSVEXPORTER {
 
         // has hourly target counter been reset for this hour - if not, reset now then return (this is an event)
         // does not actually start at the beginning of an hour, it is a 60 min allowance not hour to hour
-        $hour_reset_time = $c2p_schedule_array['history']['hour_lastreset'] + 3600;
+        $hour_reset_time = $wtgcsvexporter_schedule_array['history']['hour_lastreset'] + 3600;
         if(time() > $hour_reset_time )
         {     
             // reset hour_lastreset value and the hourlycounter
-            $c2p_schedule_array['history']['hour_lastreset'] = time();
-            $c2p_schedule_array['history']['hourcounter'] = 0;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'Hourly counter was reset for another 60 minute period', 'wtgcsvexporter' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgcsvexporter_schedule_array['history']['hour_lastreset'] = time();
+            $wtgcsvexporter_schedule_array['history']['hourcounter'] = 0;
+            $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = __( 'Hourly counter was reset for another 60 minute period', 'wtgcsvexporter' );
+            self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
             self::log_schedule( __( 'Hourly counter has been reset, no further action is taking during this event. This should only happen once every hour.', 'wtgcsvexporter' ), __( 'hourly counter reset', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
             self::event_return( __( 'hourly counter was reset', 'wtgcsvexporter' ) );        
             return;
         }  
 
         // have all target counters been reset for today - if not we will reset now and end event check (in otherwords this was the event)
-        $day_reset_time = $c2p_schedule_array['history']['day_lastreset'] + 86400;
+        $day_reset_time = $wtgcsvexporter_schedule_array['history']['day_lastreset'] + 86400;
         if(time() > $day_reset_time )
         {
-            $c2p_schedule_array['history']['hour_lastreset'] = time();
-            $c2p_schedule_array['history']['day_lastreset'] = time();
-            $c2p_schedule_array['history']['hourcounter'] = 0;
-            $c2p_schedule_array['history']['daycounter'] = 0;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'Daily and hourly events counter reset for a new 24 hours period', 'wtgcsvexporter' );
-            self::update_option_schedule_array( $c2p_schedule_array ); 
+            $wtgcsvexporter_schedule_array['history']['hour_lastreset'] = time();
+            $wtgcsvexporter_schedule_array['history']['day_lastreset'] = time();
+            $wtgcsvexporter_schedule_array['history']['hourcounter'] = 0;
+            $wtgcsvexporter_schedule_array['history']['daycounter'] = 0;
+            $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = __( 'Daily and hourly events counter reset for a new 24 hours period', 'wtgcsvexporter' );
+            self::update_option_schedule_array( $wtgcsvexporter_schedule_array ); 
             self::log_schedule( __( '24 hours had passed and the daily counter had to be reset. No further action is taking during these events and this should only happen once a day.', 'wtgcsvexporter' ), __( 'daily counter reset', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);   
             self::event_return( '24 hour counter was reset' );            
             return;
@@ -1193,7 +1188,7 @@ class WTGCSVEXPORTER {
 
         // ensure event processing allowed today
         $day = strtolower(date( 'l' ) );
-        if(!isset( $c2p_schedule_array['days'][$day] ) )
+        if(!isset( $wtgcsvexporter_schedule_array['days'][$day] ) )
         {
             self::event_return( __( 'Event processing is has not been permitted for today', 'wtgcsvexporter' ) );
             self::log_schedule( __( 'Event processing is not permitted for today. Please check schedule settings to change this.', 'wtgcsvexporter' ), __( 'schedule not permitted today', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1203,7 +1198,7 @@ class WTGCSVEXPORTER {
 
         // ensure event processing allow this hour   
         $hour = strtolower( date( 'G' ) );
-        if(!isset( $c2p_schedule_array['hours'][$hour] ) )
+        if(!isset( $wtgcsvexporter_schedule_array['hours'][$hour] ) )
         {
             self::event_return( __( 'Event processing is has not been permitted for the hour', 'wtgcsvexporter' ) );
             self::log_schedule( __( 'Processsing is not permitted for the current hour. Please check schedule settings to change this.', 'wtgcsvexporter' ), __( 'hour not permitted', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1212,29 +1207,29 @@ class WTGCSVEXPORTER {
         }
 
         // ensure hourly limit value has been set
-        if(!isset( $c2p_schedule_array['limits']['hour'] ) )
+        if(!isset( $wtgcsvexporter_schedule_array['limits']['hour'] ) )
         {  
-            $c2p_schedule_array['limits']['hour'] = 1;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'Hourly limit was set for the first time', 'wtgcsvexporter' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgcsvexporter_schedule_array['limits']['hour'] = 1;
+            $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = __( 'Hourly limit was set for the first time', 'wtgcsvexporter' );
+            self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
             self::log_schedule( __( 'The hourly limit value had not been set yet. You can change the limit but the default has been set to one. No further action is taking during this event and this should only happen once.', 'wtgcsvexporter' ), __( 'no hourly limit set', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
             self::event_return( __( 'initialised hourly limit', 'wtgcsvexporter' ) );        
             return;
         }     
                     
         // ensure daily limit value has been set
-        if(!isset( $c2p_schedule_array['limits']['day'] ) )
+        if(!isset( $wtgcsvexporter_schedule_array['limits']['day'] ) )
         {
-            $c2p_schedule_array['limits']['day'] = 1;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'Daily limit was set for the first time', 'wtgcsvexporter' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgcsvexporter_schedule_array['limits']['day'] = 1;
+            $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = __( 'Daily limit was set for the first time', 'wtgcsvexporter' );
+            self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
             self::log_schedule( __( 'The daily limit value had not been set yet. It has now been set as one which allows only one post to be created or updated etc. This action should only happen once.', 'wtgcsvexporter' ), __( 'no daily limit set', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__); 
             self::event_return( __( 'initialised daily limit', 'wtgcsvexporter' ) );           
             return;
         }
 
         // if this hours target has been met return
-        if( $c2p_schedule_array['history']['hourcounter'] >= $c2p_schedule_array['limits']['hour'] )
+        if( $wtgcsvexporter_schedule_array['history']['hourcounter'] >= $wtgcsvexporter_schedule_array['limits']['hour'] )
         {
             self::event_return( 'The hours event limit/target has been met' );
             self::log_schedule( __( 'The events target for the current hour has been met so no further processing is permitted.', 'wtgcsvexporter' ), __( 'hourly target met', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1243,7 +1238,7 @@ class WTGCSVEXPORTER {
         }
          
         // if this days target has been met return
-        if( $c2p_schedule_array['history']['daycounter'] >= $c2p_schedule_array['limits']['day'] )
+        if( $wtgcsvexporter_schedule_array['history']['daycounter'] >= $wtgcsvexporter_schedule_array['limits']['day'] )
         {
             self::event_return( __( 'The days event limit/target has been met', 'wtgcsvexporter' ) );
             self::log_schedule( __( 'The daily events target has been met for the current 24 hour period (see daily timer counter). No events will be processed until the daily timer reaches 24 hours and is reset.', 'wtgcsvexporter' ), __( 'daily target met', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1256,12 +1251,12 @@ class WTGCSVEXPORTER {
                   
         self::log_schedule(sprintf( __( 'The schedule system decided that the next event type is %s.', 'wtgcsvexporter' ), $run_event_type), __( 'next event type determined', 'wtgcsvexporter' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
             
-        // update $c2p_schedule_array with decided event type to advance the cycle and increase hourly plus daily counter
-        $c2p_schedule_array['history']['lasteventtype'] = $run_event_type;
-        $c2p_schedule_array['history']['lasteventtime'] = time(); 
-        $c2p_schedule_array['history']['hourcounter'] = $c2p_schedule_array['history']['hourcounter'] + 1; 
-        $c2p_schedule_array['history']['daycounter'] = $c2p_schedule_array['history']['daycounter'] + 1;
-        self::update_option_schedule_array( $c2p_schedule_array );
+        // update $wtgcsvexporter_schedule_array with decided event type to advance the cycle and increase hourly plus daily counter
+        $wtgcsvexporter_schedule_array['history']['lasteventtype'] = $run_event_type;
+        $wtgcsvexporter_schedule_array['history']['lasteventtime'] = time(); 
+        $wtgcsvexporter_schedule_array['history']['hourcounter'] = $wtgcsvexporter_schedule_array['history']['hourcounter'] + 1; 
+        $wtgcsvexporter_schedule_array['history']['daycounter'] = $wtgcsvexporter_schedule_array['history']['daycounter'] + 1;
+        self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
         
         // run procedure for decided event
         $event_action_outcome = $this->event_action( $run_event_type); 
@@ -1309,7 +1304,7 @@ class WTGCSVEXPORTER {
     * @link http://www.webtechglobal.co.uk/hacking/event-types
     */
     public function event_decide() {
-        global $c2p_schedule_array, $wtgcsvexporter_settings;
+        global $wtgcsvexporter_schedule_array, $wtgcsvexporter_settings;
         
         // return focused event if active
         $override_event = $this->event_decide_focus();// returns false if no override settings in place    
@@ -1323,14 +1318,14 @@ class WTGCSVEXPORTER {
         $run_event_type = 'createposts';
         
         // if we have no last event to establish the next event return the default
-        if(!isset( $c2p_schedule_array['history']['lasteventtype'] ) ){
+        if(!isset( $wtgcsvexporter_schedule_array['history']['lasteventtype'] ) ){
             return $run_event_type;
         }
         $bypass = false;// change to true when the next event after the last is not active, then the first available in the list will be the event 
         
         // dataimport -> dataupdate  
-        if( $c2p_schedule_array['history']['lasteventtype'] == 'dataimport' ){
-            if( isset( $c2p_schedule_array['eventtypes']['dataupdate']['switch'] ) && $c2p_schedule_array['eventtypes']['dataupdate']['switch'] == true){
+        if( $wtgcsvexporter_schedule_array['history']['lasteventtype'] == 'dataimport' ){
+            if( isset( $wtgcsvexporter_schedule_array['eventtypes']['dataupdate']['switch'] ) && $wtgcsvexporter_schedule_array['eventtypes']['dataupdate']['switch'] == true){
                  return 'dataupdate';    
             }else{
                 $bypass = true; 
@@ -1338,8 +1333,8 @@ class WTGCSVEXPORTER {
         }
         
         // dataupdate -> postcreation
-        if( $c2p_schedule_array['history']['lasteventtype'] == 'dataupdate' || $bypass == true){
-            if( isset( $c2p_schedule_array['eventtypes']['postcreation']['switch'] ) && $c2p_schedule_array['eventtypes']['postcreation']['switch'] == true){
+        if( $wtgcsvexporter_schedule_array['history']['lasteventtype'] == 'dataupdate' || $bypass == true){
+            if( isset( $wtgcsvexporter_schedule_array['eventtypes']['postcreation']['switch'] ) && $wtgcsvexporter_schedule_array['eventtypes']['postcreation']['switch'] == true){
                  return 'postcreation';    
             }else{
                 $bypass = true; 
@@ -1347,8 +1342,8 @@ class WTGCSVEXPORTER {
         }    
         
         // postcreation -> postupdate
-        if( $c2p_schedule_array['history']['lasteventtype'] == 'postcreation' || $bypass == true){
-            if( isset( $c2p_schedule_array['eventtypes']['postupdate']['switch'] ) && $c2p_schedule_array['eventtypes']['postupdate']['switch'] == true){
+        if( $wtgcsvexporter_schedule_array['history']['lasteventtype'] == 'postcreation' || $bypass == true){
+            if( isset( $wtgcsvexporter_schedule_array['eventtypes']['postupdate']['switch'] ) && $wtgcsvexporter_schedule_array['eventtypes']['postupdate']['switch'] == true){
                 return 'postupdate';    
             }else{
                 $bypass = true; 
@@ -1356,8 +1351,8 @@ class WTGCSVEXPORTER {
         }    
 
         // postupdate -> dataimport
-        if( $c2p_schedule_array['history']['lasteventtype'] == 'postupdate' || $bypass == true){
-            if( isset( $c2p_schedule_array['eventtypes']['dataimport']['switch'] ) && $c2p_schedule_array['eventtypes']['dataimport']['switch'] == true){
+        if( $wtgcsvexporter_schedule_array['history']['lasteventtype'] == 'postupdate' || $bypass == true){
+            if( isset( $wtgcsvexporter_schedule_array['eventtypes']['dataimport']['switch'] ) && $wtgcsvexporter_schedule_array['eventtypes']['dataimport']['switch'] == true){
                  return 'dataimport';    
             }else{
                 $bypass = true; 
@@ -1371,9 +1366,9 @@ class WTGCSVEXPORTER {
     * Determines if user wants the schedule to focus on one specific event type
     */
     public function event_decide_focus() {
-        $c2p_schedule_array = self::get_option_schedule_array();
-        if( isset( $c2p_schedule_array['focus'] ) && $c2p_schedule_array['focus'] != false ){
-            return $c2p_schedule_array['focus'];    
+        $wtgcsvexporter_schedule_array = self::get_option_schedule_array();
+        if( isset( $wtgcsvexporter_schedule_array['focus'] ) && $wtgcsvexporter_schedule_array['focus'] != false ){
+            return $wtgcsvexporter_schedule_array['focus'];    
         }
     }
     
@@ -1387,8 +1382,8 @@ class WTGCSVEXPORTER {
     */
     public function event_action( $run_event_type){    
         global $wtgcsvexporter_settings, $WTGCSVEXPORTER;
-        $c2p_schedule_array = WTGCSVEXPORTER::get_option_schedule_array();       
-        $c2p_schedule_array['history']['lasteventaction'] = $run_event_type . ' Requested'; 
+        $wtgcsvexporter_schedule_array = WTGCSVEXPORTER::get_option_schedule_array();       
+        $wtgcsvexporter_schedule_array['history']['lasteventaction'] = $run_event_type . ' Requested'; 
             
         // we can override the $run_event_type                          
         // run specific script for the giving action      
@@ -1421,134 +1416,14 @@ class WTGCSVEXPORTER {
                 
                 break;
             case "postupdate":
-
-                /*
-                * This has been designed to carry out one method of updating at a time.
-                * 1st = Changed Records: search for records updated but not applied (post update function will update the wtgcsvexporter_applied or at least the sql function called will)
-                * 2nd = Meta Key: wtgcsvexporter_outdated meta is searched, any meta value of 'yes' indicates posts needs to be updated 
-                * 3rd = Changed Projected: project array includes a value ['updatecomplete'] which is set to true when no posts can be found with wtgcsvexporter_updated dates older than ['modified']. This allows an update to all posts. 
-                */                                
-
-                $updating_carried_out = false;// change to true to avoid processing further methods after update performed
-                
-                ############################################################################
-                #                                                                          #
-                #                     UPDATED JOB TABLE RECORD METHOD                      #
-                #                                                                          #
-                ############################################################################
-
-                // check which project was auto updated last and do the next, if none get the first project
-                
-                // does our project have updated rows not applied to their post
-      
-                if( $record){
-         
-                    // determine number of rows to apply to posts based on settings
-                    
-                    // ensure no further methods are processed if one or more rows are about to be updated
-                    $updating_carried_out = true; 
-                                        
-                    // query that number of applicable rows
-                    
-                    // loop through those rows, updating their linked posts
-                    
-                    // lasteventaction value needs a few words explaining what was done during schedule event
-                    $c2p_schedule_array['history']['lasteventaction'] = 'post with ID ' . $r['wtgcsvexporter_postid'] . ' was updated with a new record';        
-
-                }
-          
-                ############################################################################
-                #                                                                          #
-                #             wtgcsvexporter_outdated META VALUE SET TO "yes" METHOD             #
-                #                                                                          #
-                ############################################################################         
-                if(!$updating_carried_out){
-
-                    // locate a post that have been marked as wtgcsvexporter_outdated
-                    //$post = wtgcsvexporter_WP_SQL_get_posts_join_meta( 'wtgcsvexporter_outdated', 'yes', $limit = 1, $select = 'ID' );
-                    if( $post){
-                        
-                        // discontinue further post update methods
-                        $updating_carried_out = true;
-                        
-                        // loop through posts
-                        foreach( $post as $key => $p){
-
-                            // continue foreach if no $project_code exists
-                            $project_code = get_post_meta( $p->ID, 'wtgcsvexporter_project_code', true);
-                            if(!$project_code){continue;}
-                            
-                            //wtgcsvexporter_post_updatepost( $p->ID,get_post_meta( $p->ID, 'wtgcsvexporter_record_id', true), $project_code);
-             
-                            //wtgcsvexporter_log_schedule( 'Post with ID '.$p->ID.' was updated because it was marked as outdated', 'post updated',1, $run_event_type, __LINE__, __FILE__, __FUNCTION__, 'medium' );
-             
-                            // update the lasteventaction value - a very short sentence explaining the specific changes in blog
-                            $c2p_schedule_array['history']['lasteventaction'] = 'post ' . $p->ID . ' was updated using wtgcsvexporter_outdated method';        
-                        }
-                    }                  
-                }
-
-                ############################################################################
-                #                                                                          #
-                #                  CHANGED PROJECT CONFIGURATION METHOD                    #
-                #                                                                          #
-                ############################################################################          
-                // this method checks $c2p_projectslist_array[PROJECTCODE]['updatecomplete']
-                // if ['updatecomplete'] = false then it means we have yet to determine if some or no posts need updating
-                // if we cannot locate just 1 post requiring updating, we change ['updatecomplete'] to true
-                // we determine if a post requires updating by comparing $c2p_projectslist_array[PROJECTCODE]['modified']
-                // against the wtgcsvexporter_updated meta value  
-                if(!$updating_carried_out){
-                                         
-                    // locate a project with ['updatecomplete'] set to false
-                    
-                    // if we find an outdated project we will store the code
-                    $outdated_project_code = false;                    
-                    
-                    // get the projects full array
-                    
-                    /*
-                        now using the ['modified'] date not stored in $project_modified, we can search for a post not updated
-                        1. if we find no posts then we change ['updatecomplete'] to true to avoid doing all this again
-                        2. if we find a post we will update just one post due to the amount of processing involved in this                     
-                    */
-                    
-                    // run query for a post that has an older wtgcsvexporter_last_updated date than the projects modified date                        
-                    $post = wtgcsvexporter_SQL_get_posts_oudated( $project_modified, $project_code, $limit = 1, $select = 'ID' );
-            
-                    if( $post){
-    
-                        foreach( $post as $key => $p){
-
-                            // get record ID used to create post and ensure the value is numeric (precaution against user editing the value)
-                            $record_id = get_post_meta( $p->ID, 'wtgcsvexporter_record_id', true);
-                            if( $record_id && is_numeric( $record_id) ){
-                                
-                                // update the post, this function does not just use new records
-                                //wtgcsvexporter_post_updatepost( $p->ID, $record_id, $project_code);
-             
-                                // update the lasteventaction value - a very short sentence explaining the specific changes in blog
-                                $c2p_schedule_array['history']['lasteventaction'] = 'post with ID ' . $p->ID . ' was updated because project configuration was changed';
-                                
-                            }
-                        }                         
-
-                    }else{
-                                
-                        // update the lasteventaction value - a very short sentence explaining the specific changes in blog
-                        $c2p_schedule_array['history']['lasteventaction'] = 'schedule determine posts for project '.$outdated_project_code.' are all updated';
-                                                            
-                        // set the ['updatecomplete'] value to true to indicate all posts have been updated 
-                            
-                    }
-                }                
+               
         
                 wtgcsvexporter_event_return( 'data update procedure finished' ); 
                     
             break;
             
         }// end switch
-        self::update_option_schedule_array( $c2p_schedule_array );
+        self::update_option_schedule_array( $wtgcsvexporter_schedule_array );
     } 
     
     /**
@@ -1598,21 +1473,8 @@ class WTGCSVEXPORTER {
         return $this->option( 'wtgcsvexporter_settings', 'update', $wtgcsvexporter_settings );# update creates record if it does not exist   
     } 
      
-    /**
-    * includes a file per custom post type, we can customize this to include or exclude based on settings
-    */
     public function custom_post_types() { 
-        global $wtgcsvexporter_settings;      
-        
-        // has the WebTechGlobal Flag system been activated for this package?                    
-        if( isset( $wtgcsvexporter_settings['posttypes']['wtgflags']['status'] ) && $wtgcsvexporter_settings['posttypes']['wtgflags']['status'] === 'enabled' ) {    
-            require( WTGCSVEXPORTER_ABSPATH . 'posttypes/flags.php' );   
-        }
-        
-        // has post "Edit Post" enhancements been setup for this package and activated in default settings?                                                       
-        if( isset( $wtgcsvexporter_settings['posttypes']['posts']['status'] ) && $wtgcsvexporter_settings['posttypes']['posts']['status'] === 'enabled' ) {    
-            require( WTGCSVEXPORTER_ABSPATH . 'posttypes/posts.php' );   
-        }
+
     }
  
     /**
@@ -1622,44 +1484,6 @@ class WTGCSVEXPORTER {
         // clear out log table (48 hour log)
         self::log_cleanup();
     }
-    
-    /**
-    * gets the specific row/s for a giving post ID
-    * 
-    * UPDATE: "c2p_postid != $post_id" was in use but this is wrong. I'm not sure how this has gone
-    * undetected considering where the function has been used. 
-    *
-    * @param mixed $project_id
-    * @param mixed $total
-    * 
-    * @author Ryan Bayne
-    * @package WTG CSV Exporter
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function get_posts_rows( $project_id, $post_id, $idcolumn = false ){
-        $this->DB = self::load_class( 'WTGCSVEXPORTER_DB', 'class-wpdb.php', 'classes' );
-        $tables_array = $this->get_dbtable_sources( $project_id );
-        return $this->DB->query_multipletables( $tables_array, $idcolumn, 'c2p_postid = '.$post_id );
-    }
-    
-    /**
-    * gets one or more rows from imported data for specific post created by specific project
-    * 
-    * @uses get_posts_rows() which does a join query 
-    * 
-    * @param mixed $project_id
-    * @param mixed $post_id
-    * @param mixed $idcolumn
-    * 
-    * @author Ryan Bayne
-    * @package WTG CSV Exporter
-    * @since 0.0.1
-    * @version 1.0 
-    */
-    public function get_posts_record( $project_id, $post_id, $idcolumn = false ){
-        return self::get_posts_rows( $project_id, $post_id, $idcolumn );
-    } 
     
     /**
     * Gets the MySQL version of column
@@ -1697,7 +1521,7 @@ class WTGCSVEXPORTER {
         }
         
         // WTG CSV Exporter own special processing triggers
-        if( isset( $_GET['c2pprocsub'] ) || isset( $_GET['wtgcsvexporteraction'] ) || isset( $_GET['nonceaction'] ) ){
+        if( isset( $_GET['wtgcsvexporteraction'] ) || isset( $_GET['nonceaction'] ) ){
             return true;
         }
         
@@ -1714,7 +1538,7 @@ class WTGCSVEXPORTER {
     * @link http://www.wtgcsvexporter.com/hacking/log-table
     */
     public function newlog( $atts ){     
-        global $wtgcsvexporter_settings, $wpdb, $c2p_currentversion;
+        global $wtgcsvexporter_settings, $wpdb, $wtgcsvexporter_currentversion;
 
         $table_name = $wpdb->prefix . 'wtglog';
         
@@ -1741,7 +1565,7 @@ class WTGCSVEXPORTER {
             'screenshoturl' => false,# screenshot URL to aid debugging 
             'userscomment' => false,# beta testers comment to aid debugging (may double as other types of comments if log for other purposes) 
             'page' => false,# related page 
-            'version' => $c2p_currentversion, 
+            'version' => $wtgcsvexporter_currentversion, 
             'panelid' => false,# id of submitted panel
             'panelname' => false,# name of submitted panel 
             'tabscreenid' => false,# id of the menu tab  
@@ -1964,7 +1788,7 @@ class WTGCSVEXPORTER {
     * Adds Script Start and Stylesheets to the beginning of pages
     */
     public function pageheader( $pagetitle, $layout ){
-        global $current_user, $c2pm, $wtgcsvexporter_settings, $c2p_pub_set;
+        global $current_user, $wtgcsvexporter_settings;
 
         // get admin settings again, all submissions and processing should update settings
         // if the interface does not show expected changes, it means there is a problem updating settings before this line
@@ -2006,7 +1830,7 @@ class WTGCSVEXPORTER {
             $this->UI->display_all();              
           
             // process global security and any other types of checks here such such check systems requirements, also checks installation status
-            $c2p_requirements_missing = self::check_requirements(true);
+            self::check_requirements(true);
     }                          
     
     /**
@@ -2159,8 +1983,8 @@ class WTGCSVEXPORTER {
     * Array [limits] holds the maximum post creation numbers 
     */
     public static function get_option_schedule_array() {
-        $c2p_schedule_array = get_option( 'wtgcsvexporter_schedule' );
-        return maybe_unserialize( $c2p_schedule_array );    
+        $wtgcsvexporter_schedule_array = get_option( 'wtgcsvexporter_schedule' );
+        return maybe_unserialize( $wtgcsvexporter_schedule_array );    
     }
     
     /**
@@ -2239,38 +2063,21 @@ class WTGCSVEXPORTER {
     } 
     
     /**
-    * Determines if giving tab for the giving page should be displayed or not based on current user.
+    * removes plugins name from $_GET['page'] and returns the rest, else returns main to indicate parent
     * 
-    * Checks for reasons not to display and returns false. If no reason found to hide the tab then true is default.
-    * 
-    * @param mixed $page
-    * @param mixed $tab
-    * 
-    * @return boolean
+    * @author Ryan Bayne
+    * @package WTG CSV Exporter
+    * @since 0.0.1
+    * @version 1.1
     */
-    public function should_tab_be_displayed( $page, $tab){
-        global $c2pm;
-
-        if( isset( $c2pm[$page]['tabs'][$tab]['permissions']['capability'] ) ){
-            $boolean = current_user_can( $c2pm[$page]['tabs'][$tab]['permissions']['capability'] );
-            if( $boolean ==  false ){
-                return false;
-            }
+    public function get_admin_page_name() {
+        if( !isset( $_GET['page'] ) ){
+            return 'main';
         }
-
-        // if screen not active
-        if( isset( $c2pm[$page]['tabs'][$tab]['active'] ) && $c2pm[$page]['tabs'][$tab]['active'] == false ){
-            return false;
-        }    
+        $exloded = explode( '_', $_GET['page'] );
+        return end( $exloded );        
+    }
         
-        // if screen is not active at all (used to disable a screen in all packages and configurations)
-        if( isset( $c2pm[$page]['tabs'][$tab]['active'] ) && $c2pm[$page]['tabs'][$tab]['active'] == false ){
-            return false;
-        }
-                     
-        return true;      
-    } 
-    
     /**
     * Get POST ID using post_name (slug)
     * 
@@ -2375,9 +2182,9 @@ class WTGCSVEXPORTER {
     * Stores the last known reason why auto event was refused during checks in event_check()
     */
     public function event_return( $return_reason){
-        $c2p_schedule_array = self::get_option_schedule_array();
-        $c2p_schedule_array['history']['lastreturnreason'] = $return_reason;
-        self::update_option_schedule_array( $c2p_schedule_array );   
+        $wtgcsvexporter_schedule_array = self::get_option_schedule_array();
+        $wtgcsvexporter_schedule_array['history']['lastreturnreason'] = $return_reason;
+        self::update_option_schedule_array( $wtgcsvexporter_schedule_array );   
     }  
     
     /**
@@ -2607,7 +2414,7 @@ class WTGCSVEXPORTER {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0.2
     * 
     * @param integer $project_id

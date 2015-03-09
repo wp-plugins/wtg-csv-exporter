@@ -86,8 +86,7 @@ class WTGCSVEXPORTER_Main_View extends WTGCSVEXPORTER_View {
         $this->WTGCSVEXPORTER = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER', 'class-wtgcsvexporter.php', 'classes' );
         $this->UI = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_UI', 'class-ui.php', 'classes' );  
         $this->DB = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_DB', 'class-wpdb.php', 'classes' );
-        $this->PHP = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_PHP', 'class-phplibrary.php', 'classes' );
-        $this->TabMenu = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
+        $this->PHP = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_PHP', 'class-phplibrary.php', 'classes' ); 
         $this->Forms = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_Formbuilder', 'class-forms.php', 'classes' );
         
         parent::setup( $action, $data );
@@ -711,7 +710,7 @@ class WTGCSVEXPORTER_Main_View extends WTGCSVEXPORTER_View {
         $this->Forms->form_start( $box['args']['formid'], $box['args']['formid'], $box['title'] );
         
         // get the tab menu 
-        $pluginmenu = $this->TabMenu->menu_array();
+        global $wtgcsvexporter_menu_array;
         ?>
         
         <table class="form-table">
@@ -721,7 +720,7 @@ class WTGCSVEXPORTER_Main_View extends WTGCSVEXPORTER_View {
         $saved_capability_array = get_option( 'wtgcsvexporter_capabilities' );
         
         // add a menu for each page for the user selecting the required capability 
-        foreach( $pluginmenu as $key => $page_array ) {
+        foreach( $wtgcsvexporter_menu_array as $key => $page_array ) {
             
             // do not add the main page to the list as a strict security measure
             if( $page_array['name'] !== 'main' ) {
@@ -749,7 +748,7 @@ class WTGCSVEXPORTER_Main_View extends WTGCSVEXPORTER_View {
     * @version 1.0
     */
     public function postbox_main_dashboardwidgetsettings( $data, $box ) { 
-        global $wtgcsvexporter_settings;
+        global $wtgcsvexporter_settings, $wtgcsvexporter_menu_array;
            
         $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'This panel is new and is advanced.   
         Please seek my advice before using it.
@@ -763,9 +762,7 @@ class WTGCSVEXPORTER_Main_View extends WTGCSVEXPORTER_View {
         echo '<table class="form-table">';
 
         // now loop through views, building settings per box (display or not, permitted role/capability  
-        $WTGCSVEXPORTER_TabMenu = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        $menu_array = $WTGCSVEXPORTER_TabMenu->menu_array();
-        foreach( $menu_array as $key => $section_array ) {
+        foreach( $wtgcsvexporter_menu_array as $key => $section_array ) {
 
             /*
                 'groupname' => string 'main' (length=4)

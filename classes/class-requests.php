@@ -41,7 +41,6 @@ class WTGCSVEXPORTER_Requests {
         $this->Files = $this->WTGCSVEXPORTER->load_class( 'WTGCSVEXPORTER_Files', 'class-files.php', 'classes' );
         $this->Forms = $this->WTGCSVEXPORTER->load_class( 'WTGCSVEXPORTER_Formbuilder', 'class-forms.php', 'classes' );
         $this->WPCore = $this->WTGCSVEXPORTER->load_class( 'WTGCSVEXPORTER_WPCore', 'class-wpcore.php', 'classes' );
-        $this->TabMenu = $this->WTGCSVEXPORTER->load_class( "WTGCSVEXPORTER_TabMenu", "class-pluginmenu.php", 'classes','pluginmenu' );    
     }
     
     /**
@@ -89,7 +88,7 @@ class WTGCSVEXPORTER_Requests {
         }     
                    
         // arriving here means check_admin_referer() security is positive       
-        global $c2p_debug_mode, $cont;
+        global $wtgcsvexporter_debug_mode, $cont;
 
         $this->PHP->var_dump( $_POST, '<h1>$_POST</h1>' );           
         $this->PHP->var_dump( $_GET, '<h1>$_GET</h1>' );    
@@ -282,8 +281,8 @@ class WTGCSVEXPORTER_Requests {
             $this->UI->create_notice( $update_result_array['failedreason'], 'info', 'Small', 'Update Failed Reason' );
         }else{  
             // storing the current file version will prevent user coming back to the update screen
-            global $c2p_currentversion;        
-            update_option( 'wtgcsvexporter_installedversion', $c2p_currentversion);
+            global $wtgcsvexporter_currentversion;        
+            update_option( 'wtgcsvexporter_installedversion', $wtgcsvexporter_currentversion);
 
             $this->UI->create_notice( __( 'Good news, the update procedure was complete. If you do not see any errors or any notices indicating a problem was detected it means the procedure worked. Please ensure any new changes suit your needs.', 'wtgcsvexporter' ), 'success', 'Small', __( 'Update Complete', 'wtgcsvexporter' ) );
             
@@ -297,70 +296,70 @@ class WTGCSVEXPORTER_Requests {
     * Save drip feed limits  
     */
     public function schedulerestrictions() {
-        $c2p_schedule_array = $this->WTGCSVEXPORTER->get_option_schedule_array();
+        $wtgcsvexporter_schedule_array = $this->WTGCSVEXPORTER->get_option_schedule_array();
         
         // if any required values are not in $_POST set them to zero
         if(!isset( $_POST['day'] ) ){
-            $c2p_schedule_array['limits']['day'] = 0;        
+            $wtgcsvexporter_schedule_array['limits']['day'] = 0;        
         }else{
-            $c2p_schedule_array['limits']['day'] = $_POST['day'];            
+            $wtgcsvexporter_schedule_array['limits']['day'] = $_POST['day'];            
         }
         
         if(!isset( $_POST['hour'] ) ){
-            $c2p_schedule_array['limits']['hour'] = 0;
+            $wtgcsvexporter_schedule_array['limits']['hour'] = 0;
         }else{
-            $c2p_schedule_array['limits']['hour'] = $_POST['hour'];            
+            $wtgcsvexporter_schedule_array['limits']['hour'] = $_POST['hour'];            
         }
         
         if(!isset( $_POST['session'] ) ){
-            $c2p_schedule_array['limits']['session'] = 0;
+            $wtgcsvexporter_schedule_array['limits']['session'] = 0;
         }else{
-            $c2p_schedule_array['limits']['session'] = $_POST['session'];            
+            $wtgcsvexporter_schedule_array['limits']['session'] = $_POST['session'];            
         }
                                  
-        // ensure $c2p_schedule_array is an array, it may be boolean false if schedule has never been set
-        if( isset( $c2p_schedule_array ) && is_array( $c2p_schedule_array ) ){
+        // ensure $wtgcsvexporter_schedule_array is an array, it may be boolean false if schedule has never been set
+        if( isset( $wtgcsvexporter_schedule_array ) && is_array( $wtgcsvexporter_schedule_array ) ){
             
             // if times array exists, unset the [times] array
-            if( isset( $c2p_schedule_array['days'] ) ){
-                unset( $c2p_schedule_array['days'] );    
+            if( isset( $wtgcsvexporter_schedule_array['days'] ) ){
+                unset( $wtgcsvexporter_schedule_array['days'] );    
             }
             
             // if hours array exists, unset the [hours] array
-            if( isset( $c2p_schedule_array['hours'] ) ){
-                unset( $c2p_schedule_array['hours'] );    
+            if( isset( $wtgcsvexporter_schedule_array['hours'] ) ){
+                unset( $wtgcsvexporter_schedule_array['hours'] );    
             }
             
         }else{
             // $schedule_array value is not array, this is first time it is being set
-            $c2p_schedule_array = array();
+            $wtgcsvexporter_schedule_array = array();
         }
         
         // loop through all days and set each one to true or false
         if( isset( $_POST['wtgcsvexporter_scheduleday_list'] ) ){
             foreach( $_POST['wtgcsvexporter_scheduleday_list'] as $key => $submitted_day ){
-                $c2p_schedule_array['days'][$submitted_day] = true;        
+                $wtgcsvexporter_schedule_array['days'][$submitted_day] = true;        
             }  
         } 
         
         // loop through all hours and add each one to the array, any not in array will not be permitted                              
         if( isset( $_POST['wtgcsvexporter_schedulehour_list'] ) ){
             foreach( $_POST['wtgcsvexporter_schedulehour_list'] as $key => $submitted_hour){
-                $c2p_schedule_array['hours'][$submitted_hour] = true;        
+                $wtgcsvexporter_schedule_array['hours'][$submitted_hour] = true;        
             }           
         }    
 
         if( isset( $_POST['deleteuserswaiting'] ) )
         {
-            $c2p_schedule_array['eventtypes']['deleteuserswaiting']['switch'] = 'enabled';                
+            $wtgcsvexporter_schedule_array['eventtypes']['deleteuserswaiting']['switch'] = 'enabled';                
         }
         
         if( isset( $_POST['eventsendemails'] ) )
         {
-            $c2p_schedule_array['eventtypes']['sendemails']['switch'] = 'enabled';    
+            $wtgcsvexporter_schedule_array['eventtypes']['sendemails']['switch'] = 'enabled';    
         }        
   
-        $this->WTGCSVEXPORTER->update_option_schedule_array( $c2p_schedule_array );
+        $this->WTGCSVEXPORTER->update_option_schedule_array( $wtgcsvexporter_schedule_array );
         $this->UI->notice_depreciated( __( 'Schedule settings have been saved.', 'wtgcsvexporter' ), 'success', 'Large', __( 'Schedule Times Saved', 'wtgcsvexporter' ) );   
     } 
     
@@ -432,18 +431,16 @@ class WTGCSVEXPORTER_Requests {
     * @version 1.0
     */
     public function pagecapabilitysettings() {
+        global $wtgcsvexporter_menu_array;
         
         // get the capabilities array from WP core
         $capabilities_array = $this->WPCore->capabilities();
 
         // get stored capability settings 
         $saved_capability_array = get_option( 'wtgcsvexporter_capabilities' );
-        
-        // get the tab menu 
-        $pluginmenu = $this->TabMenu->menu_array();
-                
+
         // to ensure no extra values are stored (more menus added to source) loop through page array
-        foreach( $pluginmenu as $key => $page_array ) {
+        foreach( $wtgcsvexporter_menu_array as $key => $page_array ) {
             
             // ensure $_POST value is also in the capabilities array to ensure user has not hacked form, adding their own capabilities
             if( isset( $_POST['pagecap' . $page_array['name'] ] ) && in_array( $_POST['pagecap' . $page_array['name'] ], $capabilities_array ) ) {
@@ -466,12 +463,9 @@ class WTGCSVEXPORTER_Requests {
     * @version 1.0
     */
     public function dashboardwidgetsettings() {
-        global $wtgcsvexporter_settings;
-        
-        // loop through pages
-        $WTGCSVEXPORTER_TabMenu = WTGCSVEXPORTER::load_class( 'WTGCSVEXPORTER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        $menu_array = $WTGCSVEXPORTER_TabMenu->menu_array();       
-        foreach( $menu_array as $key => $section_array ) {
+        global $wtgcsvexporter_settings, $wtgcsvexporter_menu_array;
+            
+        foreach( $wtgcsvexporter_menu_array as $key => $section_array ) {
 
             if( isset( $_POST[ $section_array['name'] . 'dashboardwidgetsswitch' ] ) ) {
                 $wtgcsvexporter_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] = $_POST[ $section_array['name'] . 'dashboardwidgetsswitch' ];    

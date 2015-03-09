@@ -41,7 +41,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     * 
     * @param mixed $tablename
@@ -64,7 +64,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @param mixed $tablename
@@ -85,7 +85,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @param string $tablename
@@ -142,7 +142,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     */
     public function delete( $tablename, $condition ){
@@ -155,7 +155,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     */
     public function count_rows( $tablename, $where = '' ){
@@ -168,7 +168,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     */
     public function get_value( $columns, $tablename, $conditions ){
@@ -181,7 +181,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @param mixed $meta_key
@@ -219,7 +219,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @access private
@@ -244,7 +244,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * Idea for this from Ikonboard
@@ -296,7 +296,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @todo not ready for intended use (return manually entered custom fields) so use metakeys_distinct() instead
@@ -324,7 +324,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.1 
     */
     public function metakeys_distinct( $post_type = null ) {
@@ -356,7 +356,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     *  
     * @return 0 on fail or no records or the number of records in table
@@ -383,7 +383,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     */
     public function options_beginning_with( $prependvalue){    
@@ -408,7 +408,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     */
     public function post_exist_byid( $id){
@@ -423,7 +423,7 @@ class WTGCSVEXPORTER_DB {
      * 
      * @author Ryan R. Bayne
      * @package WTG CSV Exporter
-     * @since 7.0.0
+     * @since 0.0.1
      * @version 1.0
      * 
      * @global array $wpdb
@@ -440,7 +440,7 @@ class WTGCSVEXPORTER_DB {
      * 
      * @author Ryan R. Bayne
      * @package WTG CSV Exporter
-     * @since 7.0.0
+     * @since 0.0.1
      * @version 1.0 
      * 
      * @param string $table_name (possible database table name)
@@ -459,7 +459,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @returns array $tables_array
@@ -480,7 +480,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @param mixed $return_array [false] = mysql result [true] = array of the result
@@ -524,7 +524,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     * 
     * @param mixed $table_name
@@ -545,7 +545,7 @@ class WTGCSVEXPORTER_DB {
     *
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     *  
     * @param mixed $old_key
@@ -568,7 +568,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0 
     */
     public function log_queryactions() {
@@ -581,7 +581,7 @@ class WTGCSVEXPORTER_DB {
     * 
     * @author Ryan R. Bayne
     * @package WTG CSV Exporter
-    * @since 7.0.0
+    * @since 0.0.1
     * @version 1.0
     * 
     * @returns array of distinct values or 0 if no records or false if none 

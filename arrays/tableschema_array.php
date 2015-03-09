@@ -48,171 +48,171 @@ defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 */
    
 global $wpdb;   
-$c2p_tables_array =  array();
+$wtgcsvexporter_tables_array =  array();
 ##################################################################################
 #                                 wtglog                                         #
 ##################################################################################        
-$c2p_tables_array['tables']['wtglog']['name'] = $wpdb->prefix . 'wtglog';
-$c2p_tables_array['tables']['wtglog']['required'] = false;// required for all installations or not (boolean)
-$c2p_tables_array['tables']['wtglog']['pluginversion'] = '0.0.1';
-$c2p_tables_array['tables']['wtglog']['usercreated'] = false;// if the table is created as a result of user actions rather than core installation put true
-$c2p_tables_array['tables']['wtglog']['version'] = '0.0.1';// used to force updates based on version alone rather than individual differences
-$c2p_tables_array['tables']['wtglog']['primarykey'] = 'row_id';
-$c2p_tables_array['tables']['wtglog']['uniquekey'] = 'row_id';
+$wtgcsvexporter_tables_array['tables']['wtglog']['name'] = $wpdb->prefix . 'wtglog';
+$wtgcsvexporter_tables_array['tables']['wtglog']['required'] = false;// required for all installations or not (boolean)
+$wtgcsvexporter_tables_array['tables']['wtglog']['pluginversion'] = '0.0.1';
+$wtgcsvexporter_tables_array['tables']['wtglog']['usercreated'] = false;// if the table is created as a result of user actions rather than core installation put true
+$wtgcsvexporter_tables_array['tables']['wtglog']['version'] = '0.0.1';// used to force updates based on version alone rather than individual differences
+$wtgcsvexporter_tables_array['tables']['wtglog']['primarykey'] = 'row_id';
+$wtgcsvexporter_tables_array['tables']['wtglog']['uniquekey'] = 'row_id';
 // wtglog - row_id
-$c2p_tables_array['tables']['wtglog']['columns']['row_id']['type'] = 'bigint(20)';
-$c2p_tables_array['tables']['wtglog']['columns']['row_id']['null'] = 'NOT NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['row_id']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['row_id']['default'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['row_id']['extra'] = 'AUTO_INCREMENT';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['row_id']['type'] = 'bigint(20)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['row_id']['null'] = 'NOT NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['row_id']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['row_id']['default'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['row_id']['extra'] = 'AUTO_INCREMENT';
 // wtglog - outcome
-$c2p_tables_array['tables']['wtglog']['columns']['outcome']['type'] = 'tinyint(1)';
-$c2p_tables_array['tables']['wtglog']['columns']['outcome']['null'] = 'NOT NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['outcome']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['outcome']['default'] = '1';
-$c2p_tables_array['tables']['wtglog']['columns']['outcome']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['outcome']['type'] = 'tinyint(1)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['outcome']['null'] = 'NOT NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['outcome']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['outcome']['default'] = '1';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['outcome']['extra'] = '';
 // wtglog - timestamp
-$c2p_tables_array['tables']['wtglog']['columns']['timestamp']['type'] = 'timestamp';
-$c2p_tables_array['tables']['wtglog']['columns']['timestamp']['null'] = 'NOT NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['timestamp']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['timestamp']['default'] = 'CURRENT_TIMESTAMP';
-$c2p_tables_array['tables']['wtglog']['columns']['timestamp']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['timestamp']['type'] = 'timestamp';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['timestamp']['null'] = 'NOT NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['timestamp']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['timestamp']['default'] = 'CURRENT_TIMESTAMP';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['timestamp']['extra'] = '';
 // wtglog - line
-$c2p_tables_array['tables']['wtglog']['columns']['line']['type'] = 'int(11)';
-$c2p_tables_array['tables']['wtglog']['columns']['line']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['line']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['line']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['line']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['line']['type'] = 'int(11)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['line']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['line']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['line']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['line']['extra'] = '';
 // wtglog - file
-$c2p_tables_array['tables']['wtglog']['columns']['file']['type'] = 'varchar(250)';
-$c2p_tables_array['tables']['wtglog']['columns']['file']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['file']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['file']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['file']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['file']['type'] = 'varchar(250)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['file']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['file']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['file']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['file']['extra'] = '';
 // wtglog - function
-$c2p_tables_array['tables']['wtglog']['columns']['function']['type'] = 'varchar(250)';
-$c2p_tables_array['tables']['wtglog']['columns']['function']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['function']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['function']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['function']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['function']['type'] = 'varchar(250)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['function']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['function']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['function']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['function']['extra'] = '';
 // wtglog - sqlresult
-$c2p_tables_array['tables']['wtglog']['columns']['sqlresult']['type'] = 'blob';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlresult']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlresult']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlresult']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlresult']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlresult']['type'] = 'blob';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlresult']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlresult']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlresult']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlresult']['extra'] = '';
 // wtglog - sqlquery
-$c2p_tables_array['tables']['wtglog']['columns']['sqlquery']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlquery']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlquery']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlquery']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlquery']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlquery']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlquery']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlquery']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlquery']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlquery']['extra'] = '';
 // wtglog - sqlerror
-$c2p_tables_array['tables']['wtglog']['columns']['sqlerror']['type'] = 'mediumtext';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlerror']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlerror']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlerror']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['sqlerror']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlerror']['type'] = 'mediumtext';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlerror']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlerror']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlerror']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['sqlerror']['extra'] = '';
 // wtglog - wordpresserror
-$c2p_tables_array['tables']['wtglog']['columns']['wordpresserror']['type'] = 'mediumtext';
-$c2p_tables_array['tables']['wtglog']['columns']['wordpresserror']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['wordpresserror']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['wordpresserror']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['wordpresserror']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['wordpresserror']['type'] = 'mediumtext';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['wordpresserror']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['wordpresserror']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['wordpresserror']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['wordpresserror']['extra'] = '';
 // wtglog - screenshoturl
-$c2p_tables_array['tables']['wtglog']['columns']['screenshoturl']['type'] = 'varchar(500)';
-$c2p_tables_array['tables']['wtglog']['columns']['screenshoturl']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['screenshoturl']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['screenshoturl']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['screenshoturl']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['screenshoturl']['type'] = 'varchar(500)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['screenshoturl']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['screenshoturl']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['screenshoturl']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['screenshoturl']['extra'] = '';
 // wtglog - userscomment
-$c2p_tables_array['tables']['wtglog']['columns']['userscomment']['type'] = 'mediumtext';
-$c2p_tables_array['tables']['wtglog']['columns']['userscomment']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['userscomment']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['userscomment']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['userscomment']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['userscomment']['type'] = 'mediumtext';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['userscomment']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['userscomment']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['userscomment']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['userscomment']['extra'] = '';
 // wtglog - page
-$c2p_tables_array['tables']['wtglog']['columns']['page']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['page']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['page']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['page']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['page']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['page']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['page']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['page']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['page']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['page']['extra'] = '';
 // wtglog - version
-$c2p_tables_array['tables']['wtglog']['columns']['version']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['version']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['version']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['version']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['version']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['version']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['version']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['version']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['version']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['version']['extra'] = '';
 // wtglog - panelid
-$c2p_tables_array['tables']['wtglog']['columns']['panelid']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['panelid']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['panelid']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['panelid']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['panelid']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['panelid']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['panelid']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['panelid']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['panelid']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['panelid']['extra'] = '';
 // wtglog - panelname
-$c2p_tables_array['tables']['wtglog']['columns']['panelname']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['panelname']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['panelname']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['panelname']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['panelname']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['panelname']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['panelname']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['panelname']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['panelname']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['panelname']['extra'] = '';
 // wtglog - tabscreenid
-$c2p_tables_array['tables']['wtglog']['columns']['tabscreenid']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['tabscreenid']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['tabscreenid']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['tabscreenid']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['tabscreenid']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['tabscreenid']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['tabscreenid']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['tabscreenid']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['tabscreenid']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['tabscreenid']['extra'] = '';
 // wtglog - tabscreenname
-$c2p_tables_array['tables']['wtglog']['columns']['tabscreenname']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['tabscreenname']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['tabscreenname']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['tabscreenname']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['tabscreenname']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['tabscreenname']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['tabscreenname']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['tabscreenname']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['tabscreenname']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['tabscreenname']['extra'] = '';
 // wtglog - dump
-$c2p_tables_array['tables']['wtglog']['columns']['dump']['type'] = 'longblob';
-$c2p_tables_array['tables']['wtglog']['columns']['dump']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['dump']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['dump']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['dump']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['dump']['type'] = 'longblob';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['dump']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['dump']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['dump']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['dump']['extra'] = '';
 // wtglog - ipaddress
-$c2p_tables_array['tables']['wtglog']['columns']['ipaddress']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['ipaddress']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['ipaddress']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['ipaddress']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['ipaddress']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['ipaddress']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['ipaddress']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['ipaddress']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['ipaddress']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['ipaddress']['extra'] = '';
 // wtglog - userid
-$c2p_tables_array['tables']['wtglog']['columns']['userid']['type'] = 'int(11)';
-$c2p_tables_array['tables']['wtglog']['columns']['userid']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['userid']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['userid']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['userid']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['userid']['type'] = 'int(11)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['userid']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['userid']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['userid']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['userid']['extra'] = '';
 // wtglog - comment
-$c2p_tables_array['tables']['wtglog']['columns']['comment']['type'] = 'mediumtext';
-$c2p_tables_array['tables']['wtglog']['columns']['comment']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['comment']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['comment']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['comment']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['comment']['type'] = 'mediumtext';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['comment']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['comment']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['comment']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['comment']['extra'] = '';
 // wtglog - type
-$c2p_tables_array['tables']['wtglog']['columns']['type']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['type']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['type']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['type']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['type']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['type']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['type']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['type']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['type']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['type']['extra'] = '';
 // wtglog - category
-$c2p_tables_array['tables']['wtglog']['columns']['category']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['category']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['category']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['category']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['category']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['category']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['category']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['category']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['category']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['category']['extra'] = '';
 // wtglog - action
-$c2p_tables_array['tables']['wtglog']['columns']['action']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['action']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['action']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['action']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['action']['extra'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['action']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['action']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['action']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['action']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['action']['extra'] = '';
 // wtglog - priority
-$c2p_tables_array['tables']['wtglog']['columns']['priority']['type'] = 'varchar(45)';
-$c2p_tables_array['tables']['wtglog']['columns']['priority']['null'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['priority']['key'] = '';
-$c2p_tables_array['tables']['wtglog']['columns']['priority']['default'] = 'NULL';
-$c2p_tables_array['tables']['wtglog']['columns']['priority']['extra'] = '';              
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['priority']['type'] = 'varchar(45)';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['priority']['null'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['priority']['key'] = '';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['priority']['default'] = 'NULL';
+$wtgcsvexporter_tables_array['tables']['wtglog']['columns']['priority']['extra'] = '';              
 ?>

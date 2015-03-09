@@ -5,7 +5,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: csv, export, data export, database export, data download, export csv, csv files
 Requires at least: 3.8.0
-Tested up to: 4.0.0
+Tested up to: 4.1.1
 Stable tag: trunk
 
 New multiple file CSV exporter for 2015 offers export profiles to create the perfect .csv file.
@@ -66,6 +66,15 @@ This method is safer than using any other source for the files.
 
 == Changelog == 
 
+= 0.0.4 = 
+* Feature Changes
+    * None                                       
+* Technical Information
+    * Menu array class was being loaded too many times in different locations - one global exists for the entire plugin now.
+    * Various variable name changes and removal reduntant globals.
+* Known Issues
+    * None
+    
 = 0.0.3 =
 * Feature Changes
     * Removed Update view - this corrects installation error on yesterdays update                                         

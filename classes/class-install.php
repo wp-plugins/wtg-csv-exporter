@@ -84,7 +84,7 @@ class WTGCSVEXPORTER_Install {
         // wordpresserror - if failed store WP error
         // screenshoturl - if screenshot taking and uploaded
         // userscomment - if user is testing they can submit a comment with error i.e. what they done to cause it
-        // page - plugin page ID i.e. c2pdownloads
+        // page
         // version - version of the plugin (plugin may store many logs over many versions)
         // panelid - (will be changed to formid i.e. savebasicsettings)
         // panelname - (will be changed to formname i.e Save Basic Settings)
@@ -109,8 +109,8 @@ class WTGCSVEXPORTER_Install {
         
         require_once( WTGCSVEXPORTER_ABSPATH . 'arrays/tableschema_array.php' );
         
-        if(is_array( $c2p_tables_array ) ){
-            foreach( $c2p_tables_array['tables'] as $key => $table){
+        if(is_array( $wtgcsvexporter_tables_array ) ){
+            foreach( $wtgcsvexporter_tables_array['tables'] as $key => $table){
                 if( $this->DB->does_table_exist( $table['name'] ) ){         
                     $wpdb->query( 'DROP TABLE '. $table['name'] );
                 }                                                             
@@ -127,7 +127,7 @@ class WTGCSVEXPORTER_Install {
         
         // schedule settings
         require( WTGCSVEXPORTER_ABSPATH . 'arrays/schedule_array.php' );        
-        add_option( 'wtgcsvexporter_schedule', serialize( $c2p_schedule_array ) );
+        add_option( 'wtgcsvexporter_schedule', serialize( $wtgcsvexporter_schedule_array ) );
 
         // notifications array (persistent notice feature)
         add_option( 'wtgcsvexporter_notifications', serialize( array() ) ); 

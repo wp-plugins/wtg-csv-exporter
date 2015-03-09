@@ -1,12 +1,12 @@
 <?php         
 /*
 Plugin Name: WTG CSV Exporter Beta for WordPress
-Version: 0.0.3
+Version: 0.0.4
 Plugin URI: http://www.webtechglobal.co.uk
 Description: Export WP data to .csv files with intention of creating a file for using with other software.
 Author: Ryan Bayne
 Author URI: http://www.webtechglobal.co.uk
-Last Updated: December 2014
+Last Updated: March 2015
 Text Domain: wtgcsvexporter
 Domain Path: /languages
 
@@ -38,12 +38,12 @@ if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) // Login scr
 }
               
 // package variables
-$c2p_currentversion = '0.0.3';# to be removed, version is now in the WTGCSVEXPORTER() class 
-$c2p_debug_mode = false;# to be phased out, going to use environment variables (both WP and php.ini instead)
+$wtgcsvexporter_currentversion = '0.0.4';# to be removed, version is now in the WTGCSVEXPORTER() class 
+$wtgcsvexporter_debug_mode = false;# to be phased out, going to use environment variables (both WP and php.ini instead)
 
 // go into dev mode if on test installation (if directory contains the string you will see errors and other fun stuff for geeks)               
-if( strstr( ABSPATH, 'OFFwtgcsvexporter' ) ){
-    $c2p_debug_mode = true;     
+if( strstr( ABSPATH, 'wtgcsvexporter' ) ){
+    $wtgcsvexporter_debug_mode = true;     
 }               
 
 // avoid error output here and there for the sake of performance...              
@@ -51,7 +51,7 @@ if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) )
         || ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST )
         || ( defined( 'DOING_CRON' ) && DOING_CRON )
         || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-    $c2p_debug_mode = false;
+    $wtgcsvexporter_debug_mode = false;
 }                   
 
 // define constants, feel free to add some of your own...                              
